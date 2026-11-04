@@ -256,6 +256,15 @@
     color-scheme: light;
   }
 
+  :root[data-perfil="maribel"] {
+    --accent: #5b3a8c;
+    --green: #6a32b0;
+    --green-bg: #f1e9fb;
+    --folha: #7b3fc4;
+    --mark: #f1e9fb;
+  }
+  :root[data-perfil="maribel"] #contas { display: none; }
+  #entrar-maribel { background: #6a32b0; border-color: #6a32b0; }
   * { box-sizing: border-box; }
   html, body { height: 100%; overscroll-behavior: none; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.4 var(--font); overflow: hidden; }
@@ -276,7 +285,7 @@
   #contas .recebido dd { color: var(--green); }
   #aviso { margin-top: 8px; color: var(--red); font-size: .9rem; font-weight: 600; }
 
-  #vistas { order: 3; display: grid; grid-template-columns: repeat(5, 1fr); padding: 0 max(0px, env(safe-area-inset-right, 0px)) 0 max(0px, env(safe-area-inset-left, 0px)); background: var(--card); border-top: 1px solid var(--line); }
+  #vistas { order: 3; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 0 max(0px, env(safe-area-inset-right, 0px)) 0 max(0px, env(safe-area-inset-left, 0px)); background: var(--card); border-top: 1px solid var(--line); }
   #vistas button { min-height: 56px; padding: 6px 4px; background: none; border: 0; border-top: 3px solid transparent; color: var(--muted); font-weight: 700; font-size: .88rem; cursor: pointer; }
   #vistas button[aria-current="page"] { color: var(--green); border-top-color: var(--green); }
 
@@ -449,7 +458,7 @@
 
   @media (min-width: 900px) {
     #app { position: relative; }
-    #vistas { order: 0; grid-template-columns: repeat(5, 130px); padding-left: 16px; border-top: 0; border-bottom: 1px solid var(--line); }
+    #vistas { order: 0; grid-auto-columns: 130px; justify-content: start; padding-left: 16px; border-top: 0; border-bottom: 1px solid var(--line); }
     #vistas button { border-top: 0; border-bottom: 3px solid transparent; }
     #vistas button[aria-current="page"] { border-bottom-color: var(--green); }
     #contas { max-width: 760px; }
@@ -525,6 +534,7 @@
     { valor: "sem-resposta", texto: "Sem resposta", tom: "ativo", grupo: "curso", glifo: "…" },
     { valor: "mensagem", texto: "Mensagem enviada", tom: "ativo", grupo: "curso", glifo: "…" },
     { valor: "a-pensar", texto: "A pensar", tom: "ativo", grupo: "curso", glifo: "…" },
+    { valor: "interessado", texto: "Interessado: para o Miguel", tom: "ativo", grupo: "curso", glifo: "€" },
     { valor: "fechado", texto: "Fechado", tom: "fechado", grupo: "concluido", glifo: "✓" },
     { valor: "nao-interessado", texto: "Não interessado", tom: "parado", grupo: "concluido", glifo: "✓" },
     { valor: "nao-contactar", texto: "Não contactar", tom: "bloqueado", grupo: "concluido", glifo: "✕" }
@@ -546,6 +556,7 @@
     }
   };
   const PAGA_MARIBEL = 50;
+  const MARCA = "Montra Local";
   let perfil = PERFIS.miguel;
   const HORAS_ASSUMIDAS = ["", "09:00-18:00", "09:00-18:00", "09:00-18:00", "09:00-18:00", "09:00-18:00", ""];
   const DIAS_CURTOS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
@@ -1084,7 +1095,10 @@
     return botao;
   }
   function blocoResultados(lead) {
-    const fechar = botaoResultado(lead, "fechado", "Fechou", "sucesso largo");
+    const maribel = perfil.id === "maribel";
+    const fechar = maribel
+      ? botaoResultado(lead, "interessado", "Interessado: passar ao Miguel", "sucesso largo")
+      : botaoResultado(lead, "fechado", "Fechou", "sucesso largo");
     fechar.style.minHeight = "54px";
     return criar("div", { className: "sec" },
       criar("div", { className: "titulo-sec", textContent: "Como correu?" }),
@@ -1096,6 +1110,7 @@
         botaoResultado(lead, "mensagem", "Mensagem enviada"),
         botaoResultado(lead, "nao-interessado", "Não interessado"),
         botaoResultado(lead, "nao-contactar", "Não contactar", "perigo"),
+        maribel && lead.estado === "interessado" ? botaoResultado(lead, "fechado", "O Miguel fechou", "largo") : null,
         lead.estado && lead.estado !== "por-contactar"
           ? botaoResultado(lead, "por-contactar", "Voltar a por contactar", "largo")
           : null
@@ -1103,7 +1118,7 @@
     );
   }
   function blocoAgenda(lead, agora) {
-    if (estadoDe(lead).grupo !== "curso") return null;
+    if (estadoDe(lead).grupo !== "curso" || lead.estado === "interessado") return null;
     const quando = seguimentoEm(lead);
     const agendar = (calcular) => () => {
       const data = calcular(new Date());
@@ -1223,6 +1238,21 @@
     const saltados = saltadosHoje();
     const blocos = [];
 
+    const quentes = perfil.id === "miguel" ? arquivo["leads-maribel"].filter((lead) => lead.estado === "interessado") : [];
+    if (quentes.length) {
+      blocos.push(criar("div", { className: "sec" },
+        criar("div", { className: "titulo-sec", textContent: `Liga já: ${quentes.length} da Maribel` }),
+        criar("div", { className: "lista" }, ...quentes.map((lead) => criar("div", { className: "linha-paragem" },
+          criar("span", { className: "ordem ativo", textContent: "€" }),
+          criar("span", {},
+            criar("strong", { textContent: lead.nome }),
+            criar("span", { className: "meta", textContent: lead.notas || lead.morada })
+          ),
+          lead.telefone ? criar("a", { className: "botao pequeno contorno", href: `tel:+351${soDigitos(lead)}`, textContent: "Ligar" }) : null
+        ))),
+        criar("button", { type: "button", className: "ligacao", style: "justify-self:start", textContent: "Abrir o perfil da Maribel para marcar o resultado", onclick: () => entrarComo("maribel") })
+      ));
+    }
     const porTratar = fechados().filter((lead) => !lead.pago || !lead.online);
     if (porTratar.length) {
       blocos.push(criar("div", { className: "sec" },
@@ -1441,17 +1471,20 @@
 
   function adaptar(texto) {
     if (perfil.id !== "maribel") return texto;
+    const contacto = PLANO.telefoneMiguel ? `{${PLANO.telefoneMiguel}}` : "{o número do Miguel}";
     return texto
-      .replace("Chamo-me Miguel e faço sites para negócios", "Chamo-me Maribel e trabalho com o Miguel. Fazemos sites para negócios")
-      .replace("fala o Miguel", "fala a Maribel, do Miguel Silva")
-      .replace("Sou o Miguel Silva", "Sou a Maribel, da equipa do Miguel Silva")
-      .replace("Sou o Miguel,", "Sou a Maribel,")
+      .replace("Chamo-me Miguel e faço sites para negócios", `Chamo-me Maribel e sou da ${MARCA}. Fazemos sites para negócios`)
+      .replace("fala o Miguel", `fala a Maribel, da ${MARCA}`)
+      .replace("Sou o Miguel Silva", `Sou a Maribel, da ${MARCA}`)
+      .replace("Sou o Miguel,", `Sou a Maribel, da ${MARCA},`)
+      .replace(/Quer que ponha isto online para vocês\?/g, `Posso pedir ao Miguel, o nosso responsável, para lhe ligar hoje? É ele que trata de tudo.${PLANO.telefoneMiguel ? ` O número dele é ${contacto}.` : ""}`)
+      .replace("Depois da pergunta, cala-te e espera pela resposta.", "Cala-te e espera. Se disser que sim, anota o melhor número e a hora nas notas e marca Interessado.")
+      .replace("Se quiser avançar, é só responder a esta mensagem.", PLANO.telefoneMiguel ? `Se quiser avançar, fale com o Miguel Silva, o nosso responsável: ${PLANO.telefoneMiguel}.` : "Se quiser avançar, é só responder a esta mensagem.")
       .replace(/\bfiz\b/g, "fizemos")
       .replace(/\bFiz\b/g, "Fizemos")
       .replace("Como estou a começar", "Como estamos a começar")
       .replace(/ainda tenho lugar/g, "ainda temos lugar")
       .replace("Ainda tenho lugar", "Ainda temos lugar")
-      .replace(/Quer que ponha/g, "Quer que ponhamos")
       .replace("não consigo guardar", "não conseguimos guardar")
       .replace(/não volto a contactar/g, "não voltamos a contactar")
       .replace("Obrigado", "Obrigada")
@@ -1554,11 +1587,23 @@
     const dia = naData(diaCombinado(lead, agora));
     const contacto = modo === "chamada" ? "ligar-lhe" : "passar cá";
     const comAvaliacoes = lead.reviews == null ? "Acredito" : `Com {${lead.reviews}} avaliações, acredito`;
+    const contactoMiguel = PLANO.telefoneMiguel ? `{${PLANO.telefoneMiguel}}` : "{o número do Miguel}";
     const lista = [
-      ["Sim, quero.", [
-        fala("Ótimo. Vamos confirmar o que está na página: nome, telefone, morada, horário e serviços."),
-        acao("Confere tudo com a pessoa, anota as correções, combina o pagamento e marca Fechou.")
-      ]],
+      perfil.id === "maribel"
+        ? ["Sim, quero.", [
+            fala("Ótimo. O Miguel, o nosso responsável, liga-lhe hoje para confirmar tudo e tratar do resto. Qual é o melhor número e a melhor hora?"),
+            acao("Anota nas notas e marca Interessado. Não recebas dinheiro nem prometas prazos: isso é com o Miguel.")
+          ]]
+        : ["Sim, quero.", [
+            fala("Ótimo. Vamos confirmar o que está na página: nome, telefone, morada, horário e serviços."),
+            acao("Confere tudo com a pessoa, anota as correções, combina o pagamento e marca Fechou.")
+          ]],
+      perfil.id === "maribel"
+        ? ["Pergunta que não sabes responder", [
+            fala(`Essa parte é com o Miguel, o nosso responsável.${PLANO.telefoneMiguel ? ` O número dele é ${contactoMiguel}.` : ""} Posso pedir-lhe para lhe ligar hoje?`),
+            acao("Nunca inventes uma resposta. Domínio, pagamento, prazos e questões técnicas são todos com o Miguel.")
+          ]]
+        : null,
       ["Não é a pessoa responsável", [
         fala("Sem problema. A que horas consigo apanhar a pessoa responsável?"),
         fala("Fiz uma página para o vosso negócio e queria mostrar-lha. Demora um minuto."),
@@ -1591,7 +1636,7 @@
         acao("Marca Não contactar.")
       ]]
     ];
-    return lista.map(([titulo, corpo]) => {
+    return lista.filter(Boolean).map(([titulo, corpo]) => {
       const bloco = criar("details", { className: "objecao" },
         criar("summary", { textContent: titulo }),
         criar("div", { className: "guiao" }, ...corpo)
@@ -1703,8 +1748,8 @@
   }
   function renderVistaContas() {
     const lista = todos();
-    const conversaram = lista.filter((lead) => (lead.historico || []).some((passo) => ["a-pensar", "fechado", "nao-interessado", "nao-contactar", "mensagem"].includes(passo.estado))).length;
-    const interessados = lista.filter((lead) => ["a-pensar", "fechado"].includes(lead.estado)).length;
+    const conversaram = lista.filter((lead) => (lead.historico || []).some((passo) => ["a-pensar", "interessado", "fechado", "nao-interessado", "nao-contactar", "mensagem"].includes(passo.estado))).length;
+    const interessados = lista.filter((lead) => ["a-pensar", "interessado", "fechado"].includes(lead.estado)).length;
     let sinal;
     if (interessados >= 2) sinal = criar("p", { className: "sinal bom", textContent: `${interessados} interessados: o guião e a demo estão a funcionar. Continua.` });
     else if (conversaram >= 10 && !interessados) sinal = criar("p", { className: "sinal mau", textContent: "10 conversas e nenhum interessado: o problema é a oferta ou a abordagem, não o número de portas. Pára e ajusta antes de gastares os leads restantes." });
@@ -2290,6 +2335,10 @@
   function entrarComo(id) {
     perfil = PERFIS[id];
     perfilEscolhido = true;
+    document.documentElement.dataset.perfil = id;
+    document.querySelector('[data-vista="contas"]').hidden = id !== "miguel";
+    const corTema = document.querySelector('meta[name="theme-color"]');
+    if (corTema) corTema.content = id === "maribel" ? "#7b3fc4" : "#2f9f27";
     guardadoEscrever("perfil", id);
     PLANO = lerPlano();
     colecao = bd.collection(perfil.colecao);
