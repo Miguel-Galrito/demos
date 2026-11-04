@@ -1535,7 +1535,7 @@
     if (tipo === "sim") {
       const total = lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL;
       const sinal = Math.ceil(total / 2);
-      return `Olá. Confirmo o site para ${nomeComArtigo(lead)}: ${total}€, com o 1.º mês incluído.\n\n${sinal}€ agora por MB Way para Miguel Silva, ${TELEFONE_NEGOCIO}, e ${total - sinal}€ quando vir o site pronto, em 3 dias úteis.\n\nDepois são ${MENSALIDADE}€/mês: alojamento, domínio e até 2 pequenas alterações por mês. Pode cancelar com 30 dias de aviso.\n\nO contrato segue por esta conversa. Para confirmar, responda ACEITO.`;
+      return `Olá. Confirmo o site para ${nomeComArtigo(lead)}: ${total}€, com o 1.º mês incluído.\n\n${sinal}€ agora por MB Way para Miguel Silva, ${TELEFONE_NEGOCIO}, e ${total - sinal}€ quando vir o site pronto, em 3 dias úteis.\n\nDepois são ${MENSALIDADE}€/mês: alojamento, domínio e 1 pequena alteração por mês, com um mínimo de 6 meses. Depois pode cancelar com 30 dias de aviso.\n\nO contrato segue por esta conversa. Para confirmar, responda ACEITO.`;
     }
     if (tipo === "seguimento") {
       return `Olá. Sou o Miguel Silva. Conseguiu ver a página que fiz para ${nomeComArtigo(lead)}? ${link}\n\n${fim}`;
@@ -1598,12 +1598,12 @@
       perfil.id === "maribel"
         ? ["Sim, quero.", [
             fala("Ótimo. Vamos confirmar o que está na página: nome, telefone, morada, horário e serviços."),
-            fala(`Paga metade agora, {${Math.ceil((lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL) / 2)}€}, por MB Way para o Miguel Silva, {${TELEFONE_NEGOCIO}}. O resto paga quando vir o site pronto, em 3 dias úteis.`),
+            fala(`Paga metade agora, {${Math.ceil((lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL) / 2)}€}, por MB Way para o Miguel Silva, {${TELEFONE_NEGOCIO}}. O resto paga quando vir o site pronto, em 3 dias úteis. A manutenção tem um mínimo de 6 meses.`),
             acao("Envia a mensagem de confirmação (separador Mensagem), espera pelo ACEITO e pelo MB Way, e marca Fechou. O dinheiro vai sempre para o Miguel: nunca recebas em teu nome.")
           ]]
         : ["Sim, quero.", [
             fala("Ótimo. Vamos confirmar o que está na página: nome, telefone, morada, horário e serviços."),
-            fala(`Paga metade agora, {${Math.ceil((lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL) / 2)}€}, por MB Way para {${TELEFONE_NEGOCIO}}. O resto paga quando vir o site pronto, em 3 dias úteis.`),
+            fala(`Paga metade agora, {${Math.ceil((lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL) / 2)}€}, por MB Way para {${TELEFONE_NEGOCIO}}. O resto paga quando vir o site pronto, em 3 dias úteis. A manutenção tem um mínimo de 6 meses.`),
             acao("Envia a mensagem de confirmação (separador Mensagem), espera pelo ACEITO e pelo MB Way, marca Fechou e só depois compra o domínio.")
           ]],
       perfil.id === "maribel"
