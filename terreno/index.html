@@ -541,7 +541,8 @@
   ];
   const LUGARES_OFERTA = 3;
   const PRECO_OFERTA = 99;
-  const PRECO_NORMAL = 149;
+  const PRECO_NORMAL = 199;
+  const TELEFONE_NEGOCIO = "928 031 299";
   const MENSALIDADE = 15;
   const PERFIS = {
     miguel: {
@@ -1110,7 +1111,7 @@
         botaoResultado(lead, "mensagem", "Mensagem enviada"),
         botaoResultado(lead, "nao-interessado", "Não interessado"),
         botaoResultado(lead, "nao-contactar", "Não contactar", "perigo"),
-        maribel && lead.estado === "interessado" ? botaoResultado(lead, "fechado", "O Miguel fechou", "largo") : null,
+        maribel ? botaoResultado(lead, "fechado", "Fechou: aceitou e pagou metade", "largo") : null,
         lead.estado && lead.estado !== "por-contactar"
           ? botaoResultado(lead, "por-contactar", "Voltar a por contactar", "largo")
           : null
@@ -1238,7 +1239,7 @@
     const saltados = saltadosHoje();
     const blocos = [];
 
-    const quentes = perfil.id === "miguel" ? arquivo["leads-maribel"].filter((lead) => lead.estado === "interessado") : [];
+    const quentes = perfil.id === "miguel" ? arquivo["leads-maribel"].filter((lead) => lead.estado === "interessado" || (lead.estado === "fechado" && !lead.online)) : [];
     if (quentes.length) {
       blocos.push(criar("div", { className: "sec" },
         criar("div", { className: "titulo-sec", textContent: `Liga já: ${quentes.length} da Maribel` }),
@@ -1246,7 +1247,7 @@
           criar("span", { className: "ordem ativo", textContent: "€" }),
           criar("span", {},
             criar("strong", { textContent: lead.nome }),
-            criar("span", { className: "meta", textContent: lead.notas || lead.morada })
+            criar("span", { className: "meta", textContent: lead.estado === "fechado" ? "Fechou: enviar contrato e fazer o site" : lead.notas || lead.morada })
           ),
           lead.telefone ? criar("a", { className: "botao pequeno contorno", href: `tel:+351${soDigitos(lead)}`, textContent: "Ligar" }) : null
         ))),
@@ -1477,8 +1478,8 @@
       .replace("fala o Miguel", `fala a Maribel, da ${MARCA}`)
       .replace("Sou o Miguel Silva", `Sou a Maribel, da ${MARCA}`)
       .replace("Sou o Miguel,", `Sou a Maribel, da ${MARCA},`)
-      .replace(/Quer que ponha isto online para vocês\?/g, `Posso pedir ao Miguel, o nosso responsável, para lhe ligar hoje? É ele que trata de tudo.${PLANO.telefoneMiguel ? ` O número dele é ${contacto}.` : ""}`)
-      .replace("Depois da pergunta, cala-te e espera pela resposta.", "Cala-te e espera. Se disser que sim, anota o melhor número e a hora nas notas e marca Interessado.")
+      .replace(/Quer que ponha isto online para vocês\?/g, "Quer que ponhamos isto online para vocês?")
+      .replace("Depois da pergunta, cala-te e espera pela resposta.", `Cala-te e espera. Se disser que sim, abre "Sim, quero". Se tiver dúvidas, abre "Pergunta que não sabes responder".`)
       .replace("Se quiser avançar, é só responder a esta mensagem.", PLANO.telefoneMiguel ? `Se quiser avançar, fale com o Miguel Silva, o nosso responsável: ${PLANO.telefoneMiguel}.` : "Se quiser avançar, é só responder a esta mensagem.")
       .replace(/\bfiz\b/g, "fizemos")
       .replace(/\bFiz\b/g, "Fizemos")
@@ -1531,6 +1532,11 @@
   function textoMensagem(lead, tipo, lugares) {
     const link = urlSegura(lead.demo) || "[link]";
     const fim = "Se quiser avançar, é só responder a esta mensagem.\n\nSe não quiser mais contacto, responda NÃO e não volto a contactar.";
+    if (tipo === "sim") {
+      const total = lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL;
+      const sinal = Math.ceil(total / 2);
+      return `Olá. Confirmo o site para ${nomeComArtigo(lead)}: ${total}€, com o 1.º mês incluído.\n\n${sinal}€ agora por MB Way para Miguel Silva, ${TELEFONE_NEGOCIO}, e ${total - sinal}€ quando vir o site pronto, em 3 dias úteis.\n\nDepois são ${MENSALIDADE}€/mês: alojamento, domínio e até 2 pequenas alterações por mês. Pode cancelar com 30 dias de aviso.\n\nO contrato segue por esta conversa. Para confirmar, responda ACEITO.`;
+    }
     if (tipo === "seguimento") {
       return `Olá. Sou o Miguel Silva. Conseguiu ver a página que fiz para ${nomeComArtigo(lead)}? ${link}\n\n${fim}`;
     }
@@ -1591,12 +1597,14 @@
     const lista = [
       perfil.id === "maribel"
         ? ["Sim, quero.", [
-            fala("Ótimo. O Miguel, o nosso responsável, liga-lhe hoje para confirmar tudo e tratar do resto. Qual é o melhor número e a melhor hora?"),
-            acao("Anota nas notas e marca Interessado. Não recebas dinheiro nem prometas prazos: isso é com o Miguel.")
+            fala("Ótimo. Vamos confirmar o que está na página: nome, telefone, morada, horário e serviços."),
+            fala(`Paga metade agora, {${Math.ceil((lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL) / 2)}€}, por MB Way para o Miguel Silva, {${TELEFONE_NEGOCIO}}. O resto paga quando vir o site pronto, em 3 dias úteis.`),
+            acao("Envia a mensagem de confirmação (separador Mensagem), espera pelo ACEITO e pelo MB Way, e marca Fechou. O dinheiro vai sempre para o Miguel: nunca recebas em teu nome.")
           ]]
         : ["Sim, quero.", [
             fala("Ótimo. Vamos confirmar o que está na página: nome, telefone, morada, horário e serviços."),
-            acao("Confere tudo com a pessoa, anota as correções, combina o pagamento e marca Fechou.")
+            fala(`Paga metade agora, {${Math.ceil((lugares > 0 ? PRECO_OFERTA : PRECO_NORMAL) / 2)}€}, por MB Way para {${TELEFONE_NEGOCIO}}. O resto paga quando vir o site pronto, em 3 dias úteis.`),
+            acao("Envia a mensagem de confirmação (separador Mensagem), espera pelo ACEITO e pelo MB Way, marca Fechou e só depois compra o domínio.")
           ]],
       perfil.id === "maribel"
         ? ["Pergunta que não sabes responder", [
@@ -1662,7 +1670,7 @@
         }) : null
       ),
       !eTelemovel(lead) ? criar("p", { className: "nota", textContent: "Este número é fixo. Pede um telemóvel antes de enviares." }) : null,
-      criar("button", {
+      tipo === "sim" ? null : criar("button", {
         type: "button",
         className: "botao",
         textContent: "Enviei: marcar Mensagem enviada",
@@ -1702,6 +1710,8 @@
     let corpo;
     if (modo === "mensagem") {
       corpo = [
+        criar("div", { className: "titulo-sec", textContent: "Depois do sim" }),
+        blocoMensagem(lead, lugares, "sim"),
         criar("div", { className: "titulo-sec", textContent: "Depois da chamada" }),
         blocoMensagem(lead, lugares, "chamada"),
         criar("div", { className: "titulo-sec", textContent: "Depois da visita" }),
@@ -1801,7 +1811,7 @@
         criar("div", { className: "titulo-sec", textContent: "Dinheiro por hora" }),
         tabela(["Fase", "Por venda", "Horas por venda", "€/hora"], [
           ["3 primeiros clientes", "99€", "8–9 h", "11–12€/h"],
-          ["Depois da oferta", "149€", "8–9 h", "17–19€/h"]
+          ["Depois da oferta", "199€", "8–9 h", "22–25€/h"]
         ]),
         criar("ul", { className: "lista-notas" },
           criar("li", { textContent: "Entrega: 1–2 h por site para acertar os dados e pôr online, já contadas nas horas." }),
