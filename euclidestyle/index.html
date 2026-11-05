@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html><!--personalizada-->
 <html lang="pt-PT"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
@@ -45,18 +45,37 @@ h2{font-size:2rem;color:var(--acc)}.fone{color:var(--muted)}
 .bloco{background:var(--panel);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 footer{border-top:3px solid var(--acc);color:var(--muted)}footer strong{color:var(--ink)}
 @media(min-width:760px){.servicos ul{display:grid;grid-template-columns:1fr 1fr;column-gap:56px}.deco{width:380px;height:380px;right:40px;top:0}}
+:root{--bg:#0c1020;--panel:#161b30;--ink:#f5efdf;--muted:#b9b4a4;--acc:#d9a93f;--on:#0c1020;--line:#2a3050}
+.hero{padding:0 0 44px;display:block}.hero:before,.hero:after,.hero .deco{display:none}
+.hero-foto{display:block;width:100%;height:320px;object-fit:cover;margin-bottom:26px}
+.logo{display:block;width:84px;height:84px;border-radius:50%;object-fit:cover;margin-bottom:14px;background:#fff;box-shadow:0 0 0 1px var(--line,rgba(0,0,0,.14))}
+.lema{margin-top:10px;font-size:1.08rem;color:var(--muted)}
+.fotos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.fotos img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+.fotos img:first-child:nth-last-child(3){grid-column:span 2;aspect-ratio:4/3}
+.galeria .nota a{color:inherit}
+@media(max-width:759px){.hero{text-align:left}.logo{margin-top:-68px;position:relative;z-index:1}}
+@media(min-width:760px){
+.hero{min-height:540px;display:flex;align-items:center;padding:40px 0;text-align:left}
+.hero-foto{position:absolute;top:0;right:0;bottom:0;width:50%;height:100%;margin:0}
+.hero .wrap>*{max-width:46%}.hero .cta{justify-content:flex-start}
+.fotos{grid-template-columns:repeat(3,1fr);gap:14px}
+.fotos img:first-child:nth-last-child(3){grid-column:auto;aspect-ratio:4/5}
+}
 </style>
 </head><body>
 <div class="demo">Demonstração criada para euclidestyle — Miguel Silva</div>
-<header class="hero"><svg class="deco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg><div class="wrap">
-<p class="eyebrow">Barbeiro · Alhos Vedros</p>
+<header class="hero"><svg class="deco" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg><img class="hero-foto" style="object-position:center top" src="fotos/hero.jpg" alt="euclidestyle"><div class="wrap">
+<img class="logo" src="fotos/logo.jpg" alt="Logótipo de euclidestyle"><p class="eyebrow">Barbeiro · Alhos Vedros</p>
 <h1>euclidestyle</h1>
+<p class="lema">Barbearia em Alhos Vedros e no Barreiro.</p>
 <a class="fone" href="tel:+351932655181">932 655 181</a>
 <div class="cta"><a class="btn p" href="tel:+351932655181"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Ligar</a><a class="btn s" href="https://wa.me/351932655181" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.4A8.5 8.5 0 1 1 21 12z"/><path d="M9 10.5h6M9 13.5h4"/></svg>WhatsApp</a></div>
 </div></header>
 <main>
 <section class="servicos"><div class="wrap"><h2>Serviços</h2><ul><li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1 20 20M8.1 15.9 20 4"/></svg><h3>Corte de cabelo</h3><p>Corte masculino à tesoura ou à máquina.</p></li><li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v8c0 5 2.500 9 6 9s6-4 6-9V4"/><path d="M6 11c2 2 4 2.500 6 1 2 1.500 4 1 6-1"/><path d="M10 16h4"/></svg><h3>Barba</h3><p>Aparar, desenhar e definir contornos.</p></li><li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h11v7H11z"/><path d="M11 10 4 21"/></svg><h3>Barba à navalha</h3><p>Barbear clássico com navalha.</p></li><li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><path d="M9.200 9.200 20 20M11 11l9-7"/><path d="M4 15c0 4 2 6 4 6s4-2 4-6"/></svg><h3>Corte + barba</h3><p>Os dois serviços na mesma visita.</p></li><li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M4 16h16M6 12h12M8 8h8M10 4h4"/></svg><h3>Degradê</h3><p>Transição gradual nas laterais e na nuca.</p></li><li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/></svg><h3>Corte de criança</h3><p>Corte para os mais novos.</p></li></ul>
 <p class="nota">Lista indicativa de serviços habituais nesta categoria, a confirmar com o negócio.</p></div></section>
+<section class="galeria"><div class="wrap"><h2>O nosso trabalho</h2><div class="fotos"><img src="fotos/2.jpg" alt="Trabalho de euclidestyle" loading="lazy"><img src="fotos/3.jpg" alt="Trabalho de euclidestyle" loading="lazy"><img src="fotos/10.jpg" alt="Trabalho de euclidestyle" loading="lazy"></div><p class="nota">Fotos públicas de <a href="https://www.instagram.com/euclidestyle/" target="_blank" rel="noopener">@euclidestyle</a>, usadas só nesta demonstração.</p></div></section>
 <div class="wrap duo">
 <section><div><h2>Horário</h2><dl class="horas"><div><dt>Segunda a quinta</dt><dd>09:00–19:00</dd></div><div><dt>Sexta</dt><dd>09:00–17:00</dd></div><div><dt>Sábado</dt><dd class=fechado>Encerrado</dd></div><div><dt>Domingo</dt><dd>08:00–13:00</dd></div></dl><p class="nota">Horário indicado no Google Maps.</p></div></section>
 <section><div><h2>Morada</h2><address class="morada">Rua de Caldas Xavier n75a, 2860-058 Alhos Vedros</address>
