@@ -557,6 +557,7 @@
     }
   };
   const PAGA_MARIBEL = 50;
+  const DORES = ["Marcações", "Faltas de clientes", "Clientes antigos", "Clientes novos", "Papelada", "Stock e encomendas", "Outra"];
   const MARCA = "Praça Digital";
   let perfil = PERFIS.miguel;
   const HORAS_ASSUMIDAS = ["", "09:00-18:00", "09:00-18:00", "09:00-18:00", "09:00-18:00", "09:00-18:00", ""];
@@ -1001,6 +1002,14 @@
   }
   const soDigitos = (lead) => String(lead.telefone || "").replace(/\D/g, "");
   const eTelemovel = (lead) => soDigitos(lead).startsWith("9");
+  function tipoNegocio(lead) {
+    const categoria = String(lead.categoria || "").toLowerCase();
+    if (categoria.includes("barb")) return "Barbeiros";
+    if (categoria.includes("auto")) return "Auto";
+    if (categoria.includes("est") || categoria.includes("unha") || categoria.includes("beleza")) return "Estética";
+    if (categoria.includes("cabel")) return "Cabeleireiros";
+    return "Outros";
+  }
   function urlSegura(texto) {
     const limpo = String(texto || "").trim();
     if (!limpo) return "";
@@ -1422,7 +1431,7 @@
     return /[",\n]/.test(texto) ? `"${texto.replace(/"/g, '""')}"` : texto;
   }
   function exportarCsv() {
-    const colunas = ["nome", "categoria", "morada", "telefone", "estrelas", "reviews", "presenca", "estado", "contactadoEm", "seguimento", "valor", "pago", "online", "faturado", "notas", "demo"];
+    const colunas = ["nome", "categoria", "morada", "telefone", "estrelas", "reviews", "presenca", "estado", "contactadoEm", "seguimento", "valor", "pago", "online", "faturado", "notas", "demo", "descDor", "descPalavras", "descCusto", "descUsa", "descTentou", "descContacto"];
     const linhas = [colunas.join(","), ...todos().map((lead) => colunas.map((coluna) => campoCsv(lead[coluna])).join(","))];
     downloads.save({ filename: "leads-barreiro.csv", data: "﻿" + linhas.join("\n") })
       .then(() => mostrarToast("CSV exportado."))
@@ -1537,6 +1546,9 @@
       const sinal = Math.ceil(total / 2);
       return `Olá. Confirmo o site para ${nomeComArtigo(lead)}: ${total}€, com o 1.º mês incluído.\n\n${sinal}€ agora por MB Way para Miguel Silva, ${TELEFONE_NEGOCIO}, e ${total - sinal}€ quando vir o site pronto, em 3 dias úteis.\n\nDepois são ${MENSALIDADE}€/mês: alojamento, domínio e 1 pequena alteração por mês, com um mínimo de 6 meses. Depois pode cancelar com 30 dias de aviso.\n\nO contrato segue por esta conversa. Para confirmar, responda ACEITO.`;
     }
+    if (tipo === "descoberta") {
+      return `Olá. Sou o Miguel Silva, falámos sobre ${lead.descPalavras || "[problema]"}. Obrigado pelo tempo. Quando tiver uma solução simples, envio-lhe.\n\nSe não quiser mais contacto, responda NÃO e não volto a contactar.`;
+    }
     if (tipo === "seguimento") {
       return `Olá. Sou o Miguel Silva. Conseguiu ver a página que fiz para ${nomeComArtigo(lead)}? ${link}\n\n${fim}`;
     }
@@ -1584,6 +1596,82 @@
       fala("Quer que ponha isto online para vocês?"),
       acao("Depois da pergunta, cala-te e espera pela resposta.")
     ];
+  }
+  function guiaoDescoberta(lead, agora) {
+    return [
+      acao("Aqui não vendes nada: ouves, anotas e sais com uma pista. Só resulta se a pessoa tiver um momento livre."),
+      fala(`${saudacao(agora)}. Chamo-me Miguel e ajudo negócios da zona a resolver coisas chatas do dia a dia com tecnologia. Hoje não venho vender nada. Estou a tentar perceber o que mais vos faz perder tempo ou dinheiro. Posso fazer-lhe três ou quatro perguntas rápidas?`),
+      fala("Como é um dia normal aqui? O que lhe ocupa mais tempo fora do trabalho em si?"),
+      fala("O que foi a última coisa que correu mal ou lhe fez perder tempo esta semana?"),
+      acao("Quando surgir um problema, aprofunda:"),
+      fala("Conte-me a última vez que aconteceu. Quantas vezes acontece por semana?"),
+      fala("Quanto tempo ou dinheiro lhe custa, mais ou menos?"),
+      fala("O que faz hoje para resolver isso? Já experimentou alguma aplicação ou pagou a alguém?"),
+      fala("Se eu pudesse resolver uma única coisa aqui amanhã, qual escolhia?"),
+      acao("Não ofereças solução nem preço. Para sair:"),
+      fala("Obrigado, ajudou-me muito. Vou ver se consigo uma forma simples de resolver isso. Se encontrar, posso mostrar-lhe? Fica com o meu cartão, e qual é o melhor número para lhe enviar uma mensagem?")
+    ];
+  }
+  function respostasDescoberta(lead) {
+    const auto = tipoNegocio(lead) === "Auto";
+    const lista = [
+      ["A conversa ficou parada", [
+        fala("Como é que os clientes marcam? Quantas mensagens responde por dia?"),
+        fala("Quantos clientes faltam sem avisar por semana?"),
+        fala("Como sabe que um cliente deixou de vir? Faz alguma coisa para o trazer de volta?"),
+        fala("De onde veio o último cliente novo?"),
+        fala("O que faz à mão ou em papel e preferia não fazer?"),
+        auto ? fala("Já lhe faltou alguma coisa por não ter dado conta a tempo?") : null
+      ]],
+      ["Está ocupado.", [fala("Sem problema. A que horas está mais calmo? Passo cá nessa altura.")]],
+      ["Quanto custa?", [fala("Ainda não sei, porque primeiro quero ver se resolve mesmo. Se fizer sentido, digo-lhe o preço antes de qualquer compromisso.")]],
+      ["Como é que faz isso?", [fala("Faço as ferramentas à medida do negócio e encarrego-me de tudo, por isso não tem de perceber de tecnologia.")]],
+      ["Usa inteligência artificial?", [
+        fala("Sim, uso, como ferramenta de trabalho. O que importa é que resolva o seu problema, e sou eu que respondo por isso."),
+        acao("Não precisas de falar nisto, mas se te perguntarem diz a verdade.")
+      ]],
+      ["Não volte a contactar.", [
+        fala("Com certeza, não volto a contactar. Obrigado pelo tempo."),
+        acao("Marca Não contactar.")
+      ]]
+    ];
+    return lista.map(([titulo, corpo]) => {
+      const bloco = criar("details", { className: "objecao" },
+        criar("summary", { textContent: titulo }),
+        criar("div", { className: "guiao" }, ...corpo.filter(Boolean))
+      );
+      bloco.dataset.chave = `descoberta-${titulo}`;
+      return bloco;
+    });
+  }
+  function blocoAnotarDescoberta(lead) {
+    const texto = (campo, rotulo, ajuda) => {
+      const area = criar("textarea", {
+        id: `${campo}-${lead.id}`,
+        value: lead[campo] || "",
+        placeholder: ajuda,
+        onchange: (evento) => escrever(lead.id, { [campo]: evento.target.value.trim() })
+      });
+      area.defaultValue = lead[campo] || "";
+      return criar("label", { className: "rotulo" }, rotulo, area);
+    };
+    const dor = criar("select", {
+      id: `descDor-${lead.id}`,
+      onchange: (evento) => escrever(lead.id, { descDor: evento.target.value })
+    }, ...["", ...DORES].map((valor) => criar("option", {
+      value: valor,
+      textContent: valor || "Escolher",
+      defaultSelected: (lead.descDor || "") === valor
+    })));
+    return criar("div", { className: "sec" },
+      criar("div", { className: "titulo-sec", textContent: "Anotar à saída" }),
+      criar("label", { className: "rotulo" }, "Tipo de problema", dor),
+      texto("descPalavras", "O problema, nas palavras da pessoa", "O que disse, tal e qual"),
+      texto("descCusto", "Quantas vezes acontece e quanto custa", "Por exemplo: 3 faltas por semana, cerca de 45€"),
+      texto("descUsa", "O que usa hoje para resolver", "Papel, WhatsApp, uma aplicação…"),
+      caixa(lead, "descTentou", "Já tentou resolver ou paga por uma solução"),
+      caixa(lead, "descContacto", "Deixou o contacto e aceita ver uma solução")
+    );
   }
   function objecoes(lead, lugares, modo, agora) {
     const presenca = lead.presenca || "";
@@ -1670,7 +1758,7 @@
         }) : null
       ),
       !eTelemovel(lead) ? criar("p", { className: "nota", textContent: "Este número é fixo. Pede um telemóvel antes de enviares." }) : null,
-      tipo === "sim" ? null : criar("button", {
+      tipo === "sim" || tipo === "descoberta" ? null : criar("button", {
         type: "button",
         className: "botao",
         textContent: "Enviei: marcar Mensagem enviada",
@@ -1697,7 +1785,9 @@
       onchange: (evento) => { estado.guiaoId = evento.target.value; estado.guiaoModo = null; renderGuiao(); }
     }, ...todos().map((item) => criar("option", { value: item.id, textContent: item.nome })));
     escolha.setAttribute("aria-label", "Negócio");
-    const modos = [["loja", "Na loja"], ["chamada", "Chamada"], ["seguimento", "Seguimento"], ["mensagem", "Mensagem"]].map(([valor, texto]) => {
+    const opcoes = [["loja", "Na loja"], ["chamada", "Chamada"], ["seguimento", "Seguimento"], ["mensagem", "Mensagem"]];
+    if (perfil.id === "miguel") opcoes.push(["descoberta", "Descoberta"]);
+    const modos = opcoes.map(([valor, texto]) => {
       const chip = criar("button", {
         type: "button",
         className: "chip",
@@ -1718,6 +1808,17 @@
         blocoMensagem(lead, lugares, "loja"),
         criar("div", { className: "titulo-sec", textContent: "Seguimento" }),
         blocoMensagem(lead, lugares, "seguimento")
+      ];
+    } else if (modo === "descoberta") {
+      corpo = [
+        criar("div", { className: "guiao" }, ...guiaoDescoberta(lead, agora)),
+        criar("div", { className: "sec" },
+          criar("div", { className: "titulo-sec", textContent: "Se responder" }),
+          ...respostasDescoberta(lead)
+        ),
+        blocoAnotarDescoberta(lead),
+        criar("div", { className: "titulo-sec", textContent: "Mensagem depois da conversa" }),
+        blocoMensagem(lead, lugares, "descoberta")
       ];
     } else {
       const guioes = { loja: guiaoLoja, chamada: guiaoChamada, seguimento: guiaoSeguimento };
@@ -1756,13 +1857,39 @@
       )
     );
   }
+  function blocoDescoberta(lista) {
+    const conversas = lista.filter((lead) => lead.descDor || lead.descPalavras);
+    if (!conversas.length) return null;
+    const grupos = new Map();
+    conversas.forEach((lead) => {
+      const chave = `${lead.descDor || "Sem tipo"} · ${tipoNegocio(lead)}`;
+      grupos.set(chave, [...(grupos.get(chave) || []), lead]);
+    });
+    const ordenados = [...grupos].sort((a, b) => b[1].length - a[1].length);
+    const validada = ordenados.find(([, itens]) => itens.filter((lead) => lead.descContacto).length >= 3);
+    return criar("div", { className: "sec" },
+      criar("div", { className: "titulo-sec", textContent: "Descoberta" }),
+      criar("p", { className: validada ? "sinal bom" : "sinal", textContent: validada
+        ? `${validada[0]}: 3 ou mais negócios deixaram o contacto. Confirma que acontece todas as semanas, faz algo simples e testa com um preço.`
+        : `${conversas.length} de 10 a 15 conversas. Avança quando a mesma dor aparecer em 3 ou mais negócios do mesmo tipo. "Boa ideia" não conta.` }),
+      tabela(["Dor e tipo", "Conversas", "Já tentaram", "Com contacto"], ordenados.map(([chave, itens]) => [
+        chave,
+        String(itens.length),
+        String(itens.filter((lead) => lead.descTentou).length),
+        String(itens.filter((lead) => lead.descContacto).length)
+      ])),
+      criar("ul", { className: "lista-notas" }, ...conversas.filter((lead) => lead.descPalavras).map((lead) =>
+        criar("li", { textContent: `${lead.falar || lead.nome}: ${lead.descPalavras}` })
+      ))
+    );
+  }
   function renderVistaContas() {
     const lista = todos();
     const conversaram = lista.filter((lead) => (lead.historico || []).some((passo) => ["a-pensar", "interessado", "fechado", "nao-interessado", "nao-contactar", "mensagem"].includes(passo.estado))).length;
     const interessados = lista.filter((lead) => ["a-pensar", "interessado", "fechado"].includes(lead.estado)).length;
     let sinal;
     if (interessados >= 2) sinal = criar("p", { className: "sinal bom", textContent: `${interessados} interessados: o guião e a demo estão a funcionar. Continua.` });
-    else if (conversaram >= 10 && !interessados) sinal = criar("p", { className: "sinal mau", textContent: "10 conversas e nenhum interessado: o problema é a oferta ou a abordagem, não o número de portas. Pára e ajusta antes de gastares os leads restantes." });
+    else if (conversaram >= 10 && !interessados) sinal = criar("p", { className: "sinal mau", textContent: "10 conversas e nenhum interessado: o problema é a oferta ou a abordagem, não o número de portas. Pára e ajusta antes de gastares os leads restantes. Usa o modo Descoberta, no Guião, para perceber o que lhes dói." });
     else sinal = criar("p", { className: "sinal", textContent: `${conversaram} de 10 conversas · ${interessados} ${interessados === 1 ? "interessado" : "interessados"}. Ao fim de 10: 2 ou mais "A pensar" ou "Fechado" é para continuar; nenhum é para parar e ajustar.` });
 
     const clientes = arquivo["leads-maribel"].filter((lead) => lead.estado === "fechado");
@@ -1792,6 +1919,7 @@
         criar("div", { className: "titulo-sec", textContent: `Teste de ${perfil.nome}` }),
         sinal
       ),
+      blocoDescoberta(lista),
       criar("div", { className: "sec" },
         criar("div", { className: "titulo-sec", textContent: "Para o 1.º cliente" }),
         criar("p", { className: "nota", textContent: "Estimativas sem dados reais: o que é plausível numa primeira venda porta a porta, com site já feito para mostrar." }),
