@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Quanto vale o teu tempo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--noite:#16213a;--noite2:#26385f;--prata:#d6dae2;--ceu:#eef4fb;--ouro:#c9a86a;--txt:#1d2433;--mute:#5d6678;--verde:#1f9d55}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;color:var(--txt);background:#f6f7fa;line-height:1.5}
+header{background:linear-gradient(170deg,var(--noite),var(--noite2));color:#fff;padding:26px 18px 34px;text-align:center}
+header img{height:58px}
+header h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:34px;margin-top:10px}
+header p{color:var(--prata);font-size:14px}
+main{max-width:560px;margin:-18px auto 40px;padding:0 14px}
+.card{background:#fff;border-radius:18px;padding:18px;margin-bottom:12px;box-shadow:0 2px 10px rgba(22,33,58,.06)}
+.card h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--noite2);margin-bottom:12px;display:flex;justify-content:space-between}
+.card h2 span{color:var(--verde);letter-spacing:0;text-transform:none;font-size:15px}
+label{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #eef0f4;font-size:15px}
+label:first-of-type{border-top:0}
+.campo{display:flex;align-items:center;gap:6px;flex:none}
+input{width:84px;padding:9px 10px;border:1px solid #d9dee8;border-radius:10px;font:600 16px Inter;text-align:right;color:var(--noite)}
+.u{font-size:13px;color:var(--mute);width:42px}
+.nota{font-size:13px;color:var(--mute);margin-top:6px}
+.total{background:var(--noite);color:#fff;text-align:center;padding:24px 18px}
+.total .k{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro)}
+.total .v{font-family:"Cormorant Garamond",serif;font-size:58px;line-height:1.1;margin:6px 0}
+.total .s{color:var(--prata);font-size:14px}
+.plano{display:flex;gap:8px;margin:14px 0 4px}
+.plano button{flex:1;padding:12px 6px;border-radius:12px;border:1px solid #d9dee8;background:#fff;font:600 14px Inter;color:var(--noite)}
+.plano button.on{background:var(--noite);color:#fff;border-color:var(--noite)}
+.fracao{text-align:center;padding:18px 6px 6px}
+.fracao .big{font-size:44px;font-weight:700;color:var(--verde)}
+.barra{height:14px;border-radius:7px;background:var(--ceu);overflow:hidden;margin:12px 0 6px}
+.barra i{display:block;height:100%;background:var(--ouro);border-radius:7px;transition:width .3s}
+.fica{font-size:16px;margin-top:6px}
+.fica b{color:var(--verde)}
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Leti's">
+  <h1>Quanto vale o teu tempo?</h1>
+  <p>Fazemos as contas juntas, com os teus números</p>
+</header>
+<main>
+  <div class="card">
+    <h2>1 · O teu tempo <span id="r1"></span></h2>
+    <label>Vídeos que queres publicar por semana<span class="campo"><input id="vid" type="number" value="5" inputmode="decimal"><span class="u">vídeos</span></span></label>
+    <label>Tempo para editar, legendar e publicar 1 vídeo<span class="campo"><input id="min" type="number" value="40" inputmode="decimal"><span class="u">min</span></span></label>
+    <label>Quanto ganhas por hora a atender<span class="campo"><input id="hora" type="number" value="30" inputmode="decimal"><span class="u">€/h</span></span></label>
+    <p class="nota" id="n1"></p>
+  </div>
+
+  <div class="card">
+    <h2>2 · Clientes novas <span id="r2"></span></h2>
+    <label>Clientes novas de laser por mês<span class="campo"><input id="lz" type="number" value="2" inputmode="decimal"><span class="u">clientes</span></span></label>
+    <label>Valor de um pacote de laser<span class="campo"><input id="lzv" type="number" value="150" inputmode="decimal"><span class="u">€</span></span></label>
+    <label>Outras clientes novas por mês (sobrancelhas, pestanas)<span class="campo"><input id="cl" type="number" value="3" inputmode="decimal"><span class="u">clientes</span></span></label>
+    <label>Quanto gasta uma cliente por mês<span class="campo"><input id="clv" type="number" value="25" inputmode="decimal"><span class="u">€</span></span></label>
+  </div>
+
+  <div class="card">
+    <h2>3 · Atrasos <span id="r3"></span></h2>
+    <label>Minutos perdidos com atrasos por semana<span class="campo"><input id="atr" type="number" value="60" inputmode="decimal"><span class="u">min</span></span></label>
+    <p class="nota">Com o lembrete automático na véspera e a regra dos 10 minutos, conta-se só metade como recuperada.</p>
+  </div>
+
+  <div class="card total">
+    <div class="k">O que ganhas por mês</div>
+    <div class="v" id="tot">0€</div>
+    <div class="s" id="tots"></div>
+  </div>
+
+  <div class="card">
+    <h2>E quanto custa?</h2>
+    <p class="nota">Uma gestora de redes em Portugal cobra 150 a 400€ por mês.</p>
+    <div class="plano">
+      <button data-p="59">Essencial<br>59€</button>
+      <button data-p="89" class="on">Studio<br>89€</button>
+    </div>
+    <div class="fracao">
+      <div class="big" id="pct">0%</div>
+      <div>do que ganhas</div>
+      <div class="barra"><i id="bar"></i></div>
+      <div class="fica" id="fica"></div>
+    </div>
+  </div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const eur=v=>Math.round(v).toLocaleString('pt-PT')+'€';
+let preco=89;
+function calc(){
+  const n=k=>parseFloat($(k).value)||0, sem=4.3;
+  const horas=n('vid')*sem*n('min')/60, tempo=horas*n('hora');
+  const novas=n('lz')*n('lzv')+n('cl')*n('clv');
+  const atrasos=n('atr')*sem/60*n('hora')/2;
+  const total=tempo+novas+atrasos;
+  $('r1').textContent='+'+eur(tempo); $('r2').textContent='+'+eur(novas); $('r3').textContent='+'+eur(atrasos);
+  $('n1').textContent=`São ${horas.toFixed(1).replace('.',',')} horas por mês, mais ou menos ${Math.round(horas*60/45)} atendimentos que podias fazer.`;
+  $('tot').textContent=eur(total);
+  $('tots').textContent=`${eur(tempo)} de tempo + ${eur(novas)} em clientes novas + ${eur(atrasos)} em atrasos`;
+  const p=total>0?preco/total*100:0;
+  $('pct').textContent=(p<1?'<1':Math.round(p))+'%';
+  $('bar').style.width=Math.min(100,p)+'%';
+  $('fica').innerHTML=`Pagas <b style="color:var(--noite)">${preco}€</b> e ficas com <b>${eur(total-preco)}</b> a mais por mês.`;
+}
+document.querySelectorAll('input').forEach(i=>i.addEventListener('input',calc));
+document.querySelectorAll('.plano button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.plano button').forEach(x=>x.classList.remove('on'));b.classList.add('on');preco=+b.dataset.p;calc();}));
+calc();
+</script>
+</body>
+</html>
