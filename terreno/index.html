@@ -264,7 +264,6 @@
     --mark: #f1e9fb;
   }
   :root[data-perfil="maribel"] #contas { display: none; }
-  :root[data-perfil="maribel"] #nav-clientes { display: none; }
   .cliente-links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .cliente-passo { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; }
   .cliente-passo h3 { font-size: 1rem; }
@@ -504,7 +503,6 @@
     <button type="button" data-vista="leads">Leads</button>
     <button type="button" data-vista="guiao">Guião</button>
     <button type="button" data-vista="contas">Contas</button>
-    <button type="button" data-vista="clientes" id="nav-clientes">Clientes</button>
   </nav>
   <main id="principal">
     <section id="vista-agora" class="vista"><p class="estado-pagina">A carregar os leads…</p></section>
@@ -528,7 +526,6 @@
     <section id="vista-leads" class="vista" hidden></section>
     <section id="vista-guiao" class="vista" hidden></section>
     <section id="vista-contas" class="vista" hidden></section>
-    <section id="vista-clientes" class="vista" hidden></section>
   </main>
   <aside id="ficha" aria-label="Ficha do lead" hidden></aside>
   <div id="toast" role="status" hidden></div>
@@ -1088,7 +1085,10 @@
         className: "botao contorno",
         textContent: "Guião",
         onclick: () => abrirGuiao(lead.id)
-      })
+      }),
+      ...(Array.isArray(lead.links) ? lead.links : []).map(([texto, url]) => urlSegura(url)
+        ? criar("a", { className: "botao contorno", href: urlSegura(url), target: "_blank", rel: "noopener", textContent: texto })
+        : null)
     );
     if (!numero) return acoes;
     const botaoCopiar = criar("button", { type: "button", className: "botao pequeno", textContent: "Copiar" });
@@ -1785,14 +1785,16 @@
     const lead = leads.get(estado.guiaoId) || (rota[0] && rota[0].lead) || todos()[0];
     if (!lead) return;
     const lugares = lugaresLivres();
-    const modoPadrao = ["a-pensar", "mensagem", "voltar", "sem-resposta"].includes(lead.estado) ? "seguimento" : "loja";
-    const modo = estado.guiaoModo || modoPadrao;
+    const temProprio = Array.isArray(lead.guiaoProprio) && lead.guiaoProprio.length > 0;
+    const modoPadrao = temProprio ? "reuniao" : ["a-pensar", "mensagem", "voltar", "sem-resposta"].includes(lead.estado) ? "seguimento" : "loja";
+    const modo = estado.guiaoModo === "reuniao" && !temProprio ? modoPadrao : (estado.guiaoModo || modoPadrao);
     const escolha = criar("select", {
       id: "guiao-lead",
       onchange: (evento) => { estado.guiaoId = evento.target.value; estado.guiaoModo = null; renderGuiao(); }
     }, ...todos().map((item) => criar("option", { value: item.id, textContent: item.nome })));
     escolha.setAttribute("aria-label", "Negócio");
     const opcoes = [["loja", "Na loja"], ["chamada", "Chamada"], ["seguimento", "Seguimento"], ["mensagem", "Mensagem"]];
+    if (temProprio) opcoes.unshift(["reuniao", "Reunião"]);
     if (perfil.id === "miguel") opcoes.push(["descoberta", "Descoberta"]);
     const modos = opcoes.map(([valor, texto]) => {
       const chip = criar("button", {
@@ -1805,7 +1807,9 @@
       return chip;
     });
     let corpo;
-    if (modo === "mensagem") {
+    if (modo === "reuniao") {
+      corpo = blocoGuiaoProprio(lead);
+    } else if (modo === "mensagem") {
       corpo = [
         criar("div", { className: "titulo-sec", textContent: "Depois do sim" }),
         blocoMensagem(lead, lugares, "sim"),
@@ -1840,7 +1844,7 @@
     trocar($("vista-guiao"),
       escolha,
       criar("div", { className: "chips" }, ...modos),
-      blocoDica(lead),
+      modo === "reuniao" ? null : blocoDica(lead),
       ...corpo,
       criar("button", { type: "button", className: "botao contorno", textContent: "Registar o resultado", onclick: () => abrirFicha(lead.id) })
     );
@@ -2399,91 +2403,16 @@
   }
 
 
-  /* ---------- Clientes (só Miguel) ---------- */
+  /* ---------- Guião próprio de um lead (vem da base de dados: lead.guiaoProprio) ---------- */
 
-  const CLIENTES = [{
-    nome: "Leti's Studio de Beleza",
-    quem: "Letícia Santos · R. Stara-Zagora 30A, Barreiro · 939 130 311",
-    reuniao: "Sábado, 14 de novembro, em casa",
-    preco: "1.º mês 40€, depois 89€/mês (MB WAY)",
-    links: [
-      ["Site", "https://miguel-galrito.github.io/demos/letis-studio-de-beleza/"],
-      ["Calculadora", "https://miguel-galrito.github.io/demos/letis-studio-de-beleza/calculadora.html"],
-      ["Instagram dela", "https://www.instagram.com/leticia_santos_studio_/"],
-      ["WhatsApp dela", "https://wa.me/351939130311"]
-    ],
-    guiao: [
-      { t: "1. Abrir com o vídeo (2 min)", f: [
-        "Antes de falarmos de preços, quero mostrar-te uma coisa que fiz com os teus vídeos.",
-        "[Mostra a compilação, depois o antes/depois e o mosaico.] Isto foi tudo feito com vídeos que já tinhas no Instagram, sem gravar nada de novo."
-      ] },
-      { t: "2. O que vi no Instagram dela", f: [
-        "Os teus Reels já chegam a {200–300 pessoas} com 91 seguidores. O que teve {2.227} visualizações era curto, com música e uma frase forte. Os vídeos funcionam, só falta ritmo.",
-        "E reparei que no Google Maps não te encontram, e o studio é escondido. Isso faz-te perder clientes que já te querem."
-      ] },
-      { t: "3. Perguntas com a calculadora", nota: "Abre a Calculadora e deixa-a dizer os números. Não sugiras valores.", f: [
-        "Quantos vídeos gostavas de publicar por semana? E quanto tempo levas a editar e publicar um?",
-        "Quanto cobras por umas sobrancelhas e quanto tempo demoram? [Dá o valor por hora.]",
-        "Quanto vale um pacote de laser? Quantas clientes novas de laser gostavas de ter por mês?",
-        "Quanto tempo perdes por semana com clientes que chegam atrasadas?"
-      ] },
-      { t: "4. O valor e o preço", f: [
-        "Então, por mês, isto vale-te à volta de {[total da calculadora]}.",
-        "Eu faço tudo por {89€ por mês}: tu só gravas e pões os vídeos na pasta. Eu edito, publico no Insta e no Face, faço os anúncios do laser só para o Barreiro, ponho-te no Google Maps e trato do site.",
-        "Como és da família, o primeiro mês é {40€}, com o site, o Google Maps e o logótipo novo incluídos. Se ao fim do mês não vires resultado, paras."
-      ] },
-      { t: "5. Ficar calado", nota: "Diz o preço uma vez e espera pela resposta dela. Não baixes o preço sozinho." },
-      { t: "6. Se ela hesitar", f: [
-        "\"É caro\": uma gestora em Portugal cobra 150 a 400€. Uma cliente nova de laser por mês já paga isto.",
-        "\"Vou pensar\": claro. Começamos pelo primeiro mês a 40€ e decides depois de veres.",
-        "\"Posso fazer eu com IA\": podes, e os teus avisos já ficam giros. O que te falta é tempo para fazer todos os dias.",
-        "\"E os anúncios?\": são pagos por ti diretamente à Meta, com o teu cartão. Começamos com 5€ por dia e paramos quando quiseres."
-      ] },
-      { t: "Anúncios do laser (para montar com ela)", nota: "Instagram → Reel → Promover → Mais mensagens (WhatsApp).", lista: [
-        "Público próprio → Localizações → Local → pino na Rua Stara-Zagora 30A → raio de 5 km",
-        "Mulheres, 20–55 anos, sem interesses",
-        "5€/dia durante 7 dias, com o cartão DELA e data de fim",
-        "Ao fim de 2–3 dias: Detalhe → Por região. Se houver muita gente de fora, baixa para 3–4 km",
-        "Bom resultado: menos de 4€ por conversa; avalia só ao fim de 5 a 7 dias"
-      ] },
-      { t: "7. Fechar e tratar dos acessos", lista: [
-        "1.º MB WAY de 40€ hoje; os 89€ todos os meses (pedido de MB WAY ou transferência agendada)",
-        "Adicionar-me no Meta Business Suite (sem palavra-passe)",
-        "Criar a pasta do Google Drive \"Vídeos para o Miguel\" e partilhá-la comigo",
-        "Ficha do Google Maps: criar com a conta dela e gravar o vídeo de verificação",
-        "Escolher o logótipo (recomendo o da sobrancelha)",
-        "Confirmar o caminho até à porta, o horário e os preços de cada serviço",
-        "Pôr o laser e os preços no catálogo do WhatsApp"
-      ] }
-    ]
-  }];
-
-  function renderClientes() {
-    const vista = $("vista-clientes");
-    if (perfil.id !== "miguel") {
-      vista.replaceChildren(criar("p", { className: "estado-pagina", textContent: "Só no perfil do Miguel." }));
-      return;
-    }
-    const blocos = [];
-    CLIENTES.forEach((c) => {
-      blocos.push(
-        criar("div", { className: "titulo-sec", textContent: "Cliente" }),
-        criar("h2", { textContent: c.nome }),
-        criar("p", { className: "sinal", textContent: `${c.quem}\n${c.reuniao} · ${c.preco}`, style: "white-space:pre-line" }),
-        criar("div", { className: "cliente-links" }, ...c.links.map(([texto, url]) =>
-          criar("a", { className: "botao", href: url, target: "_blank", rel: "noopener", textContent: texto }))),
-        criar("div", { className: "titulo-sec", textContent: "Guião da reunião" })
-      );
-      c.guiao.forEach((passo) => {
-        blocos.push(criar("div", { className: "cliente-passo" },
-          criar("h3", { textContent: passo.t }),
-          passo.nota ? criar("p", { className: "sinal", textContent: passo.nota }) : null,
-          ...(passo.f || []).map((linha) => fala(linha)),
-          passo.lista ? criar("ul", {}, ...passo.lista.map((item) => criar("li", { textContent: item }))) : null
-        ));
-      });
-    });
-    vista.replaceChildren(...blocos);
+  function blocoGuiaoProprio(lead) {
+    const passos = Array.isArray(lead.guiaoProprio) ? lead.guiaoProprio : [];
+    return passos.map((passo) => criar("div", { className: "cliente-passo" },
+      criar("h3", { textContent: passo.t || "" }),
+      passo.nota ? criar("p", { className: "sinal", textContent: passo.nota }) : null,
+      ...(passo.f || []).map((linha) => fala(linha)),
+      passo.lista ? criar("ul", {}, ...passo.lista.map((item) => criar("li", { textContent: item }))) : null
+    ));
   }
 
   /* ---------- Navegação e arranque ---------- */
@@ -2495,7 +2424,7 @@
       if (botao.dataset.vista === vista) botao.setAttribute("aria-current", "page");
       else botao.removeAttribute("aria-current");
     });
-    ["agora", "mapa", "leads", "guiao", "contas", "clientes"].forEach((nome) => { $(`vista-${nome}`).hidden = nome !== vista; });
+    ["agora", "mapa", "leads", "guiao", "contas"].forEach((nome) => { $(`vista-${nome}`).hidden = nome !== vista; });
     $("principal").classList.toggle("com-mapa", vista === "mapa");
     $("app").classList.toggle("em-mapa", vista === "mapa");
     $("principal").scrollTop = 0;
@@ -2518,7 +2447,6 @@
     if (estado.vista === "leads") renderLeads();
     if (estado.vista === "guiao") renderGuiao();
     if (estado.vista === "contas") renderVistaContas();
-    if (estado.vista === "clientes") renderClientes();
     if (estado.vista === "mapa") { renderFiltrosMapa(); renderFolhaMapa(); atualizarPinos(); }
     renderFicha();
   }
