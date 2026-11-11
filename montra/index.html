@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Montra Praça Digital</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Uma coluna de telemóvel; a lead escolhe-se no topo; cada separador em baixo é um passo da visita. */
+:root{
+  --bg:#f4f4f7; --card:#ffffff; --ink:#17162b; --mute:#5d5b70; --line:#e3e2ec;
+  --accent:#4b33c9; --accent-ink:#ffffff; --gold:#4b33c9; --gold-bg:#efecfd;
+  --ok:#1d8a4e; --ok-bg:#e5f5ec; --warn:#9a5200; --warn-bg:#fdf1df;
+  --body:Manrope, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f0e1a; --card:#1a1930; --ink:#ecebf5; --mute:#a9a7bf; --line:#2c2a48;
+  --accent:#a99bff; --accent-ink:#17162b; --gold:#a99bff; --gold-bg:#26234a;
+  --ok:#6fd49b; --ok-bg:#183326; --warn:#f0b56a; --warn-bg:#33270f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f0e1a; --card:#1a1930; --ink:#ecebf5; --mute:#a9a7bf; --line:#2c2a48;
+  --accent:#a99bff; --accent-ink:#17162b; --gold:#a99bff; --gold-bg:#26234a;
+  --ok:#6fd49b; --ok-bg:#183326; --warn:#f0b56a; --warn-bg:#33270f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin:0}
+.wrap{max-width:620px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 110px;display:grid;gap:14px}
+header.topo{display:grid;gap:10px;position:sticky;top:0;z-index:4;background:var(--bg);padding-block:6px}
+.linha{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.marca{font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+select{width:100%;min-height:48px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 16px var(--body)}
+.selo{background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:6px 12px;font-weight:800;font-size:13px;white-space:nowrap}
+.vista{display:grid;gap:14px}
+.vista[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;gap:10px;min-width:0}
+h1{font-size:24px;margin:0;line-height:1.2;text-wrap:balance}
+h2{font-size:20px;margin:0;line-height:1.25}
+h3{font-size:15px;margin:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+p{margin:0}
+.mute{color:var(--mute)}
+.fala{background:var(--gold-bg);border-radius:12px;padding:10px 12px;font-size:15.5px}
+.fala mark{background:none;color:var(--gold);font-weight:800}
+.nota{background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:10px 12px;font-weight:600;font-size:14.5px}
+.ok{background:var(--ok-bg);color:var(--ok);border-radius:12px;padding:10px 12px;font-weight:600;font-size:14.5px}
+ul,ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px;margin:0}
+.kv dt{color:var(--mute)} .kv dd{margin:0;font-weight:700;min-width:0;overflow-wrap:anywhere}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:700 15px var(--body);text-decoration:none;cursor:pointer}
+.btn.forte{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:focus-visible,button:focus-visible,input:focus-visible,a:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.mini{font:700 13px var(--body);padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.check:first-of-type{border-top:0}
+.check input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--ok)}
+.check.feito span{text-decoration:line-through;color:var(--mute)}
+.reels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.reel{display:grid;gap:6px;align-content:start}
+.reel video{width:100%;aspect-ratio:9/16;border-radius:14px;background:#000;display:block}
+.reel b{font-size:14px} .reel span{font-size:12.5px;color:var(--mute)}
+.calc label{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.calc label:first-of-type{border-top:0}
+.calc input{width:86px;flex:none;padding:9px 10px;border:1px solid var(--line);border-radius:10px;font:700 16px var(--body);text-align:right;background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums}
+.total{background:var(--accent);color:var(--accent-ink);border-radius:18px;padding:18px;text-align:center;display:grid;gap:4px}
+.total .v{font-size:52px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
+.barra{height:12px;border-radius:6px;background:var(--line);overflow:hidden}
+.barra i{display:block;height:100%;background:var(--gold);transition:width .3s}
+.msg{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14.5px}
+.estado{font-size:13px;font-weight:700;color:var(--ok)}
+details.obj summary,details.tut summary{cursor:pointer;font-weight:800;font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details summary::-webkit-details-marker{display:none}
+details.obj summary::after,details.tut summary::after{content:"+";color:var(--gold);font-size:20px;line-height:1}
+details[open].obj summary::after,details[open].tut summary::after{content:"–"}
+details.obj > div,details.tut > ol,details.tut > ul,details.tut > p{margin-top:10px}
+details.obj > div{display:grid;gap:8px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
+nav.tabs button{display:grid;place-items:center;gap:2px;min-height:58px;color:var(--mute);background:none;border:0;font:700 11px var(--body);cursor:pointer}
+nav.tabs svg{width:22px;height:22px}
+nav.tabs button[aria-current="page"]{color:var(--ink)}
+nav.tabs button[aria-current="page"] svg{color:var(--gold)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+td,th{padding:8px 6px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--mute);font-weight:600}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topo">
+    <div class="linha">
+      <span class="marca">Praça Digital · Montra</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button type="button" id="tema" class="mini" aria-label="Mudar entre modo claro e escuro">Escuro</button>
+        <span class="selo" id="selo"></span>
+      </div>
+    </div>
+    <label for="escolha" class="mute" style="font-size:13px;margin-bottom:-6px">Lead</label>
+    <select id="escolha"></select>
+  </header>
+
+  <section id="v-lead" class="vista"></section>
+  <section id="v-guiao" class="vista" hidden></section>
+  <section id="v-mostrar" class="vista" hidden></section>
+  <section id="v-contas" class="vista" hidden></section>
+  <section id="v-seguir" class="vista" hidden></section>
+  <section id="v-fechar" class="vista" hidden></section>
+</div>
+
+<nav class="tabs" aria-label="Separadores">
+  <button type="button" data-v="lead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 10l9-6 9 6v10H3z"/><path d="M9 20v-6h6v6"/></svg>Lead</button>
+  <button type="button" data-v="guiao"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5.4A8.5 8.5 0 1 1 21 12z"/></svg>Guião</button>
+  <button type="button" data-v="mostrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>Mostrar</button>
+  <button type="button" data-v="contas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2M14 11h2M8 15h2M14 15h2M8 19h8"/></svg>Contas</button>
+  <button type="button" data-v="seguir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>Seguir</button>
+  <button type="button" data-v="fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg>Fechar</button>
+</nav>
+
+<script>
+const LEADS = [{"id": "top-style", "slug": "a-sua-barbearia-classica-barbeiro-top-style", "ramo": "barbeiro", "nome": "A Sua Barbearia Classica Barbeiro Top Style", "falar": "Top Style", "de": "da", "categoria": "Barbeiro", "morada": "R. Miguel Bombarda, 2830-355 Barreiro", "telefone": "920 291 554", "estrelas": "4,5", "reviews": 92, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/a-sua-barbearia-classica-barbeiro-top-style/", "ig": "barbeirotopstyle", "horario": ["Segunda a quinta: 09:00–20:00", "Sexta: 09:00–13:30 · 15:00–20:00", "Sábado: 09:00–20:00", "Domingo: Encerrado"], "videos": [["montra"], ["dicas"]]}, {"id": "alice-cardoso", "slug": "alice-cardoso-lda", "ramo": "auto", "nome": "Alice & Cardoso Lda", "falar": "Alice & Cardoso", "de": "da", "categoria": "Oficina de reparação de automóveis", "morada": "R. Gateiras 13, 2830-216 Barreiro", "telefone": "21 215 0069", "estrelas": "4,5", "reviews": 21, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/alice-cardoso-lda/", "ig": null, "horario": [], "videos": [["dicas"], ["inverno"]]}, {"id": "ana-ferreira", "slug": "ana-ferreira-estetica-e-bem-estar", "ramo": "estetica", "nome": "Ana Ferreira - Estética e Bem Estar", "falar": "Ana Ferreira Estética", "de": "da", "categoria": "Esteticista", "morada": "Praceta dos Loios 7D, 2835-342 Lavradio", "telefone": "937 388 803", "estrelas": "5,0", "reviews": 29, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/ana-ferreira-estetica-e-bem-estar/", "ig": "anapaulaferreira_estetica", "horario": ["Segunda: 14:00–18:00", "Terça a sexta: 10:00–18:00", "Sábado: 10:00–16:00", "Domingo: Encerrado"], "videos": [["montra"], ["dicas"]]}, {"id": "andreia", "slug": "andreia-cabeleireiro-e-estetica", "ramo": "cabelo", "nome": "Andreia Cabeleireiro e Estética", "falar": "Andreia Cabeleireiro", "de": "da", "categoria": "Cabeleireiro", "morada": "R. Mormugão 1A, Santo André, 2830-198 Barreiro", "telefone": "927 992 729", "estrelas": "4,8", "reviews": 24, "presenca": "só Facebook", "demo": "https://miguel-galrito.github.io/demos/andreia-cabeleireiro-e-estetica/", "ig": null, "horario": ["Segunda: Encerrado", "Terça a sábado: 09:00–19:00", "Domingo: Encerrado"], "videos": [["montra"], ["dicas"]]}, {"id": "atelier-barbeiro", "slug": "atelier-do-barbeiro", "ramo": "barbeiro", "nome": "Atelier do Barbeiro", "falar": "Atelier do Barbeiro", "de": "do", "categoria": "Barbeiro", "morada": "R. Dom Afonso de Albuquerque 11B, 2830-177 Barreiro", "telefone": "931 871 120", "estrelas": "5,0", "reviews": 39, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/atelier-do-barbeiro/", "ig": "atelierdobarbeiro", "horario": ["Segunda: Encerrado", "Terça a sábado: 09:00–19:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "auto-germano", "slug": "auto-germano-candido-sa", "ramo": "auto", "nome": "Auto Germano & Cândido SA", "falar": "Auto Germano & Cândido", "de": "da", "categoria": "Loja de peças para automóveis", "morada": "R. Manuel Carrapeto 50, Santo António da Charneca", "telefone": "21 214 8530", "estrelas": "4,4", "reviews": 66, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/auto-germano-candido-sa/", "ig": null, "horario": ["Segunda a sexta: 09:00–13:00 · 14:00–18:00", "Sábado: 09:00–13:00", "Domingo: Encerrado"], "videos": [["dicas"], ["inverno"]]}, {"id": "costa-barbeiro", "slug": "barbearia-costa-barbeiro", "ramo": "barbeiro", "nome": "Barbearia - Costa Barbeiro", "falar": "Costa Barbeiro", "de": "do", "categoria": "Barbeiro", "morada": "Av. Bocage Nº 37 B, 2830-003 Barreiro", "telefone": "938 241 515", "estrelas": "4,8", "reviews": 77, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/barbearia-costa-barbeiro/", "ig": "costa_barbeiro", "horario": ["Segunda: Encerrado", "Terça a sábado: 09:00–13:00 · 15:00–19:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "el-hombre", "slug": "barbearia-el-hombre", "ramo": "barbeiro", "nome": "Barbearia El Hombre", "falar": "Barbearia El Hombre", "de": "da", "categoria": "Barbeiro", "morada": "R. Nuno Tristão 10A, 2830-095 Barreiro", "telefone": "912 093 579", "estrelas": "4,8", "reviews": 138, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/barbearia-el-hombre/", "ig": "barbeariaelhombre", "horario": ["Segunda: Encerrado", "Terça a sábado: 09:00–19:00", "Domingo: Encerrado"], "videos": [["montra"], ["dicas"]]}, {"id": "estacao-vip", "slug": "barbearia-estacao-vip", "ramo": "barbeiro", "nome": "Barbearia Estação VIP", "falar": "Estação VIP", "de": "da", "categoria": "Barbeiro", "morada": "R. 20 de Abril 4b, 2830-266 Barreiro", "telefone": "21 139 5420", "estrelas": "4,6", "reviews": 92, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/barbearia-estacao-vip/", "ig": "estacaovipbarbearia", "horario": ["Segunda a sexta: 09:00–13:00 · 15:00–20:00", "Sábado: 09:00–13:00 · 15:00–18:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "lebrinhas", "slug": "barbearia-lebrinhas", "ramo": "barbeiro", "nome": "Barbearia Lebrinhas", "falar": "Barbearia Lebrinhas", "de": "da", "categoria": "Barbeiro", "morada": "R. Dom Afonso de Albuquerque 90, Santo André, 2830-174 Barreiro", "telefone": "929 103 320", "estrelas": "5,0", "reviews": 22, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/barbearia-lebrinhas/", "ig": "barbearia_lebrinhas", "horario": ["Segunda a sexta: 10:00–19:00", "Sábado: 10:00–18:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "catia-gomes", "slug": "cabeleireiro-barreiro-catiagomeshairstylist", "ramo": "cabelo", "nome": "Cabeleireiro Barreiro CátiaGomeshairstylist", "falar": "Cátia Gomes", "de": "da", "categoria": "Salão de cabeleireiro", "morada": "R. José Cardoso Pires 1A, 2830-554 Barreiro", "telefone": "935 790 706", "estrelas": "5,0", "reviews": 242, "presenca": "só Facebook", "demo": "https://miguel-galrito.github.io/demos/cabeleireiro-barreiro-catiagomeshairstylist/", "ig": "catiagomeshairstylist", "horario": ["Segunda a sexta: 09:00–13:00 · 15:00–19:00", "Sábado: 09:00–17:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "cabelo-e-alma", "slug": "cabelo-e-alma", "ramo": "cabelo", "nome": "Cabelo e Alma", "falar": "Cabelo e Alma", "de": "do", "categoria": "Salão de cabeleireiro", "morada": "R. Nuno Tristão 27A, 2830-095 Barreiro", "telefone": "21 215 0974", "estrelas": "", "reviews": null, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/cabelo-e-alma/", "ig": "cabelo.alma", "horario": ["Segunda e terça: 09:30–19:00", "Quarta: Encerrado", "Quinta a sábado: 09:30–19:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "camai", "slug": "camai-centro-de-estetica-avancada-barreiro", "ramo": "estetica", "nome": "Camai - Centro de Estética Avançada Barreiro", "falar": "Camai", "de": "da", "categoria": "Esteticista", "morada": "Praceta dos Loios 7D, 2835-342 Lavradio", "telefone": "933 401 283", "estrelas": "5,0", "reviews": 55, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/camai-centro-de-estetica-avancada-barreiro/", "ig": "camaiestetica", "horario": ["Segunda: 14:00–18:00", "Terça a sexta: 10:00–13:00 · 14:00–18:00", "Sábado: 10:00–15:00", "Domingo: Encerrado"], "videos": [["montra"], ["dicas"]]}, {"id": "catia-coelho", "slug": "catiacoelho-hairstudio", "ramo": "cabelo", "nome": "CátiaCoelho-HairStudio", "falar": "Cátia Coelho Hair Studio", "de": "do", "categoria": "Cabeleireiro", "morada": "R. Heliodoro Salgado 61 A, 2830-346 Barreiro", "telefone": "910 828 603", "estrelas": "4,8", "reviews": 66, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/catiacoelho-hairstudio/", "ig": "catiacoelhohairstudio", "horario": ["Segunda: Encerrado", "Terça a sábado: 09:30–19:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "dd-barber", "slug": "d-d-barber", "ramo": "barbeiro", "nome": "D&D Barber", "falar": "D&D Barber", "de": "da", "categoria": "Barbeiro", "morada": "Av. da Liberdade, Barreiro", "telefone": "926 310 910", "estrelas": "4,8", "reviews": 25, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/d-d-barber/", "ig": "ddbarber01", "horario": ["Segunda a sábado: 10:00–20:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "eliane", "slug": "eliane-estetica-e-cabeleireiro", "ramo": "cabelo", "nome": "Eliane | Estética e Cabeleireiro", "falar": "Eliane Estética", "de": "da", "categoria": "Salão de beleza", "morada": "R. Manuel Carrapeto 4 Loja E, 2835-765 Santo António da Charneca", "telefone": "966 489 016", "estrelas": "5,0", "reviews": 119, "presenca": "só página de marcações", "demo": "https://miguel-galrito.github.io/demos/eliane-estetica-e-cabeleireiro/", "ig": "elianeestetica", "horario": ["Segunda: Encerrado", "Terça a sexta: 10:00–18:00", "Sábado: 09:00–18:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "escultora-imagem", "slug": "escultora-de-imagem", "ramo": "cabelo", "nome": "Escultora de Imagem", "falar": "Escultora de Imagem", "de": "da", "categoria": "Cabeleireiro", "morada": "R. Cidade da Praia 2b, Santo André, 2830-164 Barreiro", "telefone": "918 587 890", "estrelas": "5,0", "reviews": 14, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/escultora-de-imagem/", "ig": null, "horario": ["Segunda: Encerrado", "Terça a sexta: 09:30–18:30", "Sábado: 09:00–18:30", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "gloria", "slug": "gloria-cabeleireiros", "ramo": "cabelo", "nome": "Glória Cabeleireiros", "falar": "Glória Cabeleireiros", "de": "da", "categoria": "Cabeleireiro", "morada": "R. Vasco da Gama 49 A, 2830-365 Barreiro", "telefone": "967 055 686", "estrelas": "4,7", "reviews": 68, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/gloria-cabeleireiros/", "ig": "gloriacabeleireiros", "horario": ["Segunda a sábado: 09:00–19:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "hair-groove", "slug": "hair-groove", "ramo": "barbeiro", "nome": "Hair Groove", "falar": "Hair Groove", "de": "do", "categoria": "Barbeiro", "morada": "R. Manuel Martins Gomes Júnior 9B, 2835-725 Santo António da Charneca", "telefone": "21 082 8180", "estrelas": "4,8", "reviews": 169, "presenca": "só Facebook", "demo": "https://miguel-galrito.github.io/demos/hair-groove/", "ig": "hairgroove_barbershop", "horario": ["Segunda a sexta: 09:00–13:00 · 15:00–20:00", "Sábado: 09:00–13:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "ligia-carina", "slug": "ligia-carina-centro-estetica", "ramo": "unhas", "nome": "Ligia Carina | Centro Estética", "falar": "Ligia Carina", "de": "da", "categoria": "Salão de beleza", "morada": "Av. Movimento das Forças Armadas n55b, 2830-093 Barreiro", "telefone": "969 121 437", "estrelas": "5,0", "reviews": 10, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/ligia-carina-centro-estetica/", "ig": "ligiacarinaestetica", "horario": ["Segunda: Encerrado", "Terça a sexta: 09:30–18:00", "Sábado: 09:00–13:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "luis-daniel", "slug": "luis-daniel-oficina-auto", "ramo": "auto", "nome": "Luis Daniel - Oficina Auto", "falar": "Oficina Luís Daniel", "de": "da", "categoria": "Oficina de reparação de automóveis", "morada": "R. 38 (Parque Empresarial da Quimiparque) 9, Barreiro", "telefone": "21 588 0613", "estrelas": "4,8", "reviews": 97, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/luis-daniel-oficina-auto/", "ig": null, "horario": ["Segunda a sexta: 09:00–18:00", "Sábado e domingo: Encerrado"], "videos": [["dicas"], ["inverno"]]}, {"id": "luis-anjos", "slug": "luis-anjos-hairstylist", "ramo": "cabelo", "nome": "Luís Anjos Hairstylist", "falar": "Luís Anjos", "de": "do", "categoria": "Cabeleireiro", "morada": "R. Dr. Manuel Pacheco Nobre 72D, 2830-068 Barreiro", "telefone": "924 309 016", "estrelas": "5,0", "reviews": 171, "presenca": "site básico (base44)", "demo": "https://miguel-galrito.github.io/demos/luis-anjos-hairstylist/", "ig": "hairstylistluisanjos", "horario": ["Segunda: Encerrado", "Terça a sábado: 09:30–19:30", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "made-by-tania", "slug": "made-by-tania-hair-design-beauty", "ramo": "cabelo", "nome": "Made By Tânia | Hair design & Beauty", "falar": "Made By Tânia", "de": "da", "categoria": "Salão de cabeleireiro", "morada": "R. Bombeiros Voluntários do Barreiro 12A, 2830-832 Barreiro", "telefone": "913 719 240", "estrelas": "5,0", "reviews": 53, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/made-by-tania-hair-design-beauty/", "ig": "madebytaniaaaa", "horario": ["Segunda: Encerrado", "Terça a sexta: 09:00–18:00", "Sábado: 09:00–16:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "paula-vidotto", "slug": "paula-vidotto-beauty", "ramo": "estetica", "nome": "Paula Vidotto Beauty", "falar": "Paula Vidotto", "de": "da", "categoria": "Salão de beleza", "morada": "R. da Estação 97B, 2830-354 Barreiro", "telefone": "926 669 590", "estrelas": "5,0", "reviews": 35, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/paula-vidotto-beauty/", "ig": "paulavidottobeauty", "horario": ["Segunda: 09:00–18:00", "Terça a sexta: 10:00–18:00", "Sábado: 09:00–13:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "phpeel", "slug": "phpeel-estetica", "ramo": "estetica", "nome": "PHPeel Estética", "falar": "PHPeel", "de": "da", "categoria": "Esteticista", "morada": "R. Bartolomeu Dias 33A Loja 33 A, 2830-040 Barreiro", "telefone": "963 563 778", "estrelas": "4,9", "reviews": 171, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/phpeel-estetica/", "ig": "phpeel", "horario": ["Segunda a sábado: 09:00–20:00", "Domingo: Encerrado"], "videos": [["montra"], ["dicas"]]}, {"id": "ricardus", "slug": "ricardus", "ramo": "cabelo", "nome": "Ricardus", "falar": "Ricardus", "de": "do", "categoria": "Cabeleireiro", "morada": "Av. Bocage 56, Barreiro", "telefone": "963 086 263", "estrelas": "4,7", "reviews": 242, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/ricardus/", "ig": "ricardus_cabeleireiro", "horario": ["Segunda: Encerrado", "Terça a sexta: 09:00–13:00 · 15:00–19:30", "Sábado: 08:30–13:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "sanchez-barber", "slug": "sanchez-barber", "ramo": "barbeiro", "nome": "Sanchez Barber", "falar": "Sanchez Barber", "de": "da", "categoria": "Barbeiro", "morada": "R. Nagar Aveli, Santo André, 2830-197 Barreiro", "telefone": "925 431 881", "estrelas": "5,0", "reviews": 20, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/sanchez-barber/", "ig": "sanchez_barber_", "horario": ["Segunda a sexta: 09:00–19:30", "Sábado: 08:30–18:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "stilothay", "slug": "stilothay-estetica", "ramo": "unhas", "nome": "Stilothay Estética", "falar": "Thaylla", "de": "da", "categoria": "Salão de beleza", "morada": "R. Vasco da Gama 41 Loja 14, 2830-365 Barreiro", "telefone": "927 140 328", "estrelas": "5,0", "reviews": 37, "presenca": "só Instagram", "demo": "https://miguel-galrito.github.io/demos/stilothay-estetica/", "ig": "stilothayestetica", "horario": ["Segunda: Encerrado", "Terça a quinta: 09:00–18:00", "Sexta: 09:00–19:00", "Sábado: 09:00–18:00", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}, {"id": "studio-sensie", "slug": "studio-sensie", "ramo": "estetica", "nome": "Studio Sensie", "falar": "Studio Sensie", "de": "do", "categoria": "Esteticista", "morada": "Tv. 31 de Janeiro 1 C, Alto do Seixalinho, 2830-107 Barreiro", "telefone": "910 026 346", "estrelas": "4,9", "reviews": 79, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/studio-sensie/", "ig": "studiossensie", "horario": ["Segunda a sexta: 09:30–13:30 · 15:00–19:00", "Sábado: 09:30–15:00", "Domingo: Encerrado"], "videos": [["montra"], ["dicas"]]}, {"id": "unhas-barreiro", "slug": "unhas-barreiro", "ramo": "unhas", "nome": "Unhas Barreiro", "falar": "Unhas Barreiro", "de": "da", "categoria": "Salão de beleza", "morada": "Av. Alfredo da Silva 78, 2830-335 Barreiro", "telefone": "927 370 463", "estrelas": "4,9", "reviews": 84, "presenca": "só página de marcações", "demo": "https://miguel-galrito.github.io/demos/unhas-barreiro/", "ig": "unhasbarreiro_", "horario": [], "videos": [["montra"], ["qual"]]}, {"id": "villainconcept", "slug": "villainconcept", "ramo": "cabelo", "nome": "Villainconcept", "falar": "Villainconcept", "de": "do", "categoria": "Salão de cabeleireiro", "morada": "Av. Santa Maria 13 B, 2830-007 Barreiro", "telefone": "915 599 218", "estrelas": "4,8", "reviews": 30, "presenca": "nenhuma", "demo": "https://miguel-galrito.github.io/demos/villainconcept/", "ig": "villainconcept", "horario": ["Segunda a sábado: 09:00–19:30", "Domingo: Encerrado"], "videos": [["montra"], ["qual"]]}];
+const CONF = {"preco": 170, "miguel": "Miguel Silva", "telefone": "928 031 299", "base": "https://miguel-galrito.github.io/demos/"};
+const PRECO = CONF.preco;               // €/mês
+const MIGUEL = CONF.miguel;             // nome nas mensagens
+const TEL_MIGUEL = CONF.telefone;       // MB WAY e WhatsApp do Miguel
+const BASE = CONF.base;                 // https://…/demos/
+
+const RAMO = {
+  barbeiro: {plural:"barbearias", servico:"um corte", cliente:"cliente",
+    dores:["Instagram parado ou com poucas publicações","Cadeira vazia em certos dias (segunda e terça de manhã)","Marcações por mensagem a toda a hora, mesmo a cortar"],
+    calc:{valor:12, freq:1, novos:6, horas:2, hora:20, vagas:4}},
+  cabelo: {plural:"cabeleireiros", servico:"uma visita", cliente:"cliente",
+    dores:["Publicar dá trabalho depois de um dia inteiro de pé","Agenda com buracos a meio da semana","Clientes novas quase só por recomendação"],
+    calc:{valor:35, freq:0.7, novos:4, horas:2, hora:25, vagas:3}},
+  estetica: {plural:"centros de estética", servico:"uma sessão", cliente:"cliente",
+    dores:["Tratamentos caros precisam de ser explicados, e isso é conteúdo","Máquinas ou tratamentos novos que ainda pouca gente conhece","Agenda irregular de semana para semana"],
+    calc:{valor:40, freq:1, novos:3, horas:2, hora:30, vagas:3}},
+  unhas: {plural:"salões de unhas", servico:"uma manutenção", cliente:"cliente",
+    dores:["Muitos trabalhos bonitos que nunca chegam a ser publicados","Muita concorrência no Barreiro: ganha quem aparece mais","Faltas e atrasos"],
+    calc:{valor:25, freq:1.3, novos:4, horas:2, hora:20, vagas:3}},
+  auto: {plural:"oficinas", servico:"uma revisão", cliente:"cliente",
+    dores:["Os clientes só aparecem quando o carro avaria","Não há lembretes de revisão nem de inspeção","No Google aparece pouco ao lado das marcas grandes"],
+    calc:{valor:180, freq:0.17, novos:3, horas:1, hora:30, vagas:1}}
+};
+const VIDEO_TXT = {
+  montra:["Montra","Os melhores trabalhos, com o nome e o contacto no fim"],
+  qual:["Qual escolhes?","Pede comentários: é o que faz o Instagram mostrar o perfil a mais gente"],
+  dicas:["3 dicas","Educativo e animado: as pessoas guardam e partilham"],
+  inverno:["Antes do inverno","Lembrete da época, para trazer carros à revisão"]
+};
+
+const $ = (id) => document.getElementById(id);
+function el(tag, props = {}, ...kids){ const e = Object.assign(document.createElement(tag), props); e.append(...kids.filter(k => k != null && k !== false)); return e; }
+function fala(txt){ const p = el("p",{className:"fala"}); txt.split(/\{(.+?)\}/).forEach((parte,i)=>{ if(parte) p.append(i%2 ? el("mark",{textContent:parte}) : parte); }); return p; }
+const nota = (t) => el("p",{className:"nota",textContent:t});
+const card = (...kids) => el("div",{className:"card"}, ...kids);
+const eyebrow = (t) => el("div",{className:"eyebrow",textContent:t});
+const guardar = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+const ler = (k,def) => { try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; }catch(e){ return def; } };
+const eur = v => Math.round(v).toLocaleString("pt-PT") + "€";
+const digitos = (l) => (l.telefone||"").replace(/\D/g,"");
+const movel = (l) => /^9\d{8}$/.test(digitos(l));
+const nomeCom = (l) => `${l.de} ${l.falar}`;               // "da Eliane Estética"
+const linkVideos = (l) => `${BASE}${l.slug}/videos.html`;
+function saudacao(){ const h = new Date().getHours(); return h < 13 ? "Bom dia" : h < 20 ? "Boa tarde" : "Boa noite"; }
+function fraseGoogle(l){
+  if(!l.estrelas) return null;
+  return `Vi que têm {${l.estrelas} estrelas} com {${l.reviews} avaliações} no Google. Os clientes gostam de vocês; falta é mais gente do Barreiro saber que existem.`;
+}
+function fraseFalta(l){
+  const p = (l.presenca||"").toLowerCase();
+  if(p.startsWith("site")) return "O site que têm agora é muito básico e não mostra os vossos trabalhos.";
+  if(p.includes("marca")) return "Têm uma página de marcações, mas não têm site próprio nem vídeos a trazer gente nova.";
+  if(p.includes("facebook")) return "Estão só no Facebook, e quem tem menos de 40 anos está no Instagram.";
+  if(p.includes("instagram")) return "Têm Instagram, mas não têm site, e as publicações não têm ritmo certo.";
+  return "Não encontrei site, e quem vos procura no Google só vê a ficha do Maps.";
+}
+
+// ---------------------------------------------------------------- estado
+let lead = null, vista = "lead";
+const VISTAS = ["lead","guiao","mostrar","contas","seguir","fechar"];
+
+function escolher(id, v){
+  lead = LEADS.find(x => x.id === id) || LEADS[0];
+  if (v && VISTAS.includes(v)) vista = v;
+  $("escolha").value = lead.id;
+  guardar("montra-ultima", lead.id);
+  history.replaceState(null, "", `#${lead.id}${vista !== "lead" ? "/" + vista : ""}`);
+  desenhar();
+}
+function irPara(v){
+  vista = v;
+  VISTAS.forEach(n => { $("v-"+n).hidden = n !== v; });
+  document.querySelectorAll("nav.tabs button").forEach(b => b.dataset.v === v ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current"));
+  document.querySelectorAll("video").forEach(vd => { if (v !== "mostrar") vd.pause(); });
+  history.replaceState(null, "", `#${lead.id}${v !== "lead" ? "/" + v : ""}`);
+  window.scrollTo(0,0);
+}
+function desenhar(){
+  ["lead","guiao","mostrar","contas","seguir","fechar"].forEach(n => $("v-"+n).replaceChildren());
+  vLead(); vGuiao(); vMostrar(); vContas(); vSeguir(); vFechar();
+  irPara(vista);
+}
+
+// ---------------------------------------------------------------- LEAD
+function vLead(){
+  const l = lead, R = RAMO[l.ramo];
+  const kv = el("dl",{className:"kv"},
+    el("dt",{textContent:"Ramo"}), el("dd",{textContent:l.categoria}),
+    el("dt",{textContent:"Morada"}), el("dd",{textContent:l.morada}),
+    el("dt",{textContent:"Telefone"}), el("dd",{}, l.telefone || "—", " ", l.telefone ? copiarBtn(digitos(l)) : null, movel(l) ? null : el("span",{className:"mute",textContent:" (fixo: pede um telemóvel)"})),
+    l.estrelas ? el("dt",{textContent:"Google"}) : null, l.estrelas ? el("dd",{textContent:`${l.estrelas} ★ · ${l.reviews} avaliações`}) : null,
+    el("dt",{textContent:"Online"}), el("dd",{textContent:l.presenca || "—"}),
+    l.horario && l.horario.length ? el("dt",{textContent:"Horário"}) : null,
+    l.horario && l.horario.length ? el("dd",{style:"font-weight:600",textContent:l.horario.join(" · ")}) : null
+  );
+  $("v-lead").append(
+    card(eyebrow(l.categoria), el("h1",{textContent:l.nome}), kv,
+      el("div",{className:"btns"},
+        el("a",{className:"btn forte",href:l.demo,target:"_blank",rel:"noopener",textContent:"Abrir o site"}),
+        l.ig ? el("a",{className:"btn",href:`https://www.instagram.com/${l.ig}/`,target:"_blank",rel:"noopener",textContent:"Instagram"}) : null,
+        el("a",{className:"btn",href:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.nome+" "+l.morada)}`,target:"_blank",rel:"noopener",textContent:"Maps"})
+      )),
+    card(eyebrow("Dores prováveis (confirma com perguntas)"), el("ol",{}, ...R.dores.map(d => el("li",{textContent:d}))),
+      el("p",{className:"mute",textContent:"Não as digas como certezas. Pergunta e deixa a pessoa dizer."})),
+    card(eyebrow("Ordem da visita"), el("ol",{},
+      el("li",{},"Abrir com o ", el("b",{textContent:"vídeo 1"})," (separador Mostrar)"),
+      el("li",{},"Perguntas do ", el("b",{textContent:"Guião"})),
+      el("li",{},"Vídeo 2 e site"),
+      el("li",{},"Fazer as ", el("b",{textContent:"Contas"})," com os números deles"),
+      el("li",{},"Dizer o preço e ficar calado"),
+      el("li",{},"Sim: ", el("b",{textContent:"Fechar"}),". Não ou \"vou pensar\": ", el("b",{textContent:"Seguir"})))),
+    notasCard()
+  );
+}
+function notasCard(){
+  const k = `montra-notas-${lead.id}`;
+  const ta = el("textarea",{value:ler(k,""),rows:4,placeholder:"Nome do responsável, dor principal, quando voltar…",style:"width:100%;font:15px var(--body);padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)"});
+  ta.addEventListener("input", () => guardar(k, ta.value));
+  return card(eyebrow("Notas (só neste telemóvel)"), ta);
+}
+function copiarBtn(txt, rotulo="Copiar"){
+  const b = el("button",{type:"button",className:"mini",textContent:rotulo});
+  b.addEventListener("click", () => {
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(()=>{ b.textContent="Copiado"; setTimeout(()=>b.textContent=rotulo,1500); }).catch(()=>{ b.textContent="Seleciona e copia"; });
+  });
+  return b;
+}
+
+// ---------------------------------------------------------------- GUIÃO
+function passo(titulo, notaTxt, falas){ return card(el("h2",{textContent:titulo}), notaTxt ? nota(notaTxt) : null, ...falas.filter(Boolean).map(fala)); }
+function objecao(titulo, falas, notaTxt){
+  return el("details",{className:"card obj"}, el("summary",{textContent:titulo}), el("div",{}, ...falas.map(fala), notaTxt ? nota(notaTxt) : null));
+}
+function vGuiao(){
+  const l = lead, R = RAMO[l.ramo], auto = l.ramo === "auto";
+  const tu = auto ? "o seu" : "o vosso";
+  const c = l.calc || R.calc;
+  const porCliente = c.valor * c.freq;
+  const bastam = Math.max(1, Math.ceil(PRECO / porCliente));
+  $("v-guiao").append(
+    passo("1. Abertura (30 s)", "Entra com o vídeo 1 já aberto no telemóvel.", [
+      `${saudacao()}. Sou o ${MIGUEL.split(" ")[0]}, da {Praça Digital}. Estou hoje a passar pelas ${R.plural} aqui do Barreiro. É a pessoa responsável?`,
+      l.ig ? "Fiz um vídeo com as fotos do vosso Instagram. Posso mostrar? São {15 segundos}." : "Fiz um vídeo para o vosso negócio. Posso mostrar? São {15 segundos}."
+    ]),
+    card(el("h2",{textContent:"2. Dá o telemóvel e cala-te"}), nota("Põe o vídeo 1 a tocar e entrega o telemóvel. Não fales enquanto vê."),
+      el("div",{className:"btns"}, el("button",{type:"button",className:"btn forte",textContent:"Abrir vídeos",onclick:()=>irPara("mostrar")}))),
+    passo("3. Perguntas (ouvir mais do que falar)", "Faz 2 ou 3, não todas. Anota a dor principal em Notas.", [
+      fraseGoogle(l),
+      `Quem trata do ${auto ? "Facebook e do Google" : "vosso Instagram"} hoje? Quantas vezes conseguem publicar por semana?`,
+      "De onde vêm os clientes novos? Google, Instagram ou recomendação?",
+      "Usam algum programa para as marcações, ou é tudo por telefone e WhatsApp?",
+      auto ? "Têm forma de lembrar os clientes da revisão ou da inspeção?" : "Há dias ou horas em que a agenda fica vazia?"
+    ]),
+    passo("4. O que vi e o 2.º vídeo", null, [
+      fraseFalta(l),
+      l.videos[1] ? (l.videos[1][0] === "qual" ? "Este segundo é para trazer comentários: as pessoas respondem 1, 2 ou 3 e o Instagram mostra-vos a mais gente do Barreiro." : "Este segundo é animado, feito sem precisar de fotos. Dá para fazer vários por mês.") : null,
+      "E fiz também o site, com os vossos serviços, a morada e um botão para ligar."
+    ]),
+    passo("5. Contas", "Separador Contas. Deixa-os dizer os números; não sugiras valores.", [
+      `Quanto custa ${R.servico}? E quantas vezes por mês volta um cliente fiel?`,
+      "Quantos clientes novos acha que vêm por mês se aparecerem todas as semanas no Instagram e nos anúncios do Barreiro?",
+      `Então basta {${bastam} ${bastam === 1 ? "cliente novo fiel" : "clientes novos fiéis"}} por mês para isto se pagar.`
+    ]),
+    passo("6. Preço e silêncio", "Diz o preço uma vez e espera. Não baixes sozinho.", [
+      `Eu faço tudo por {${PRECO}€ por mês}: o site, a ficha do Google Maps, {12 vídeos por mês} publicados no Instagram e no Facebook, e os anúncios só para o Barreiro.`,
+      `${auto ? "Só me envia" : "Vocês só me enviam"} fotos e vídeos do trabalho pelo WhatsApp. Eu edito, publico e trato do resto.`,
+      "Os anúncios pagam-se à parte, diretamente à Meta, com o vosso cartão. Começamos com 5€ por dia e param quando quiserem.",
+      "Começamos este mês?"
+    ]),
+    card(eyebrow("Objeções"), el("p",{className:"mute",textContent:"Toca para abrir."})),
+    objecao("\"É caro.\"", [
+      `Uma gestora de redes em Portugal cobra entre {150 e 400€} por mês, sem site. E basta {${bastam} ${bastam === 1 ? "cliente novo" : "clientes novos"}} por mês para se pagar.`
+    ]),
+    objecao("\"Vou pensar.\"", [
+      "Claro. Há alguma coisa que queira saber já?",
+      `Envio-lhe os vídeos por WhatsApp para ver com calma. Posso passar cá {${diaVolta()}} para me dizer sim ou não?`
+    ], "Envia logo a mensagem \"Hoje, depois da visita\" no separador Seguir."),
+    objecao("\"Já tenho quem faça\" / \"o meu sobrinho faz\".", [
+      "Ótimo. Quantas vezes publica por semana? O que faz diferença é a regularidade: 3 vídeos por semana, todas as semanas, e anúncios só para o Barreiro.",
+      "Se quiser, faço só o mês de teste e comparam."
+    ]),
+    objecao("\"Não tenho tempo para gravar.\"", [
+      "Não precisa de gravar a sério: uma foto ou 10 segundos de vídeo de cada trabalho chegam. Os vídeos que viu foram feitos só com fotos que já tinham."
+    ]),
+    objecao("\"Não preciso, tenho clientes.\"", [
+      "Ainda bem. Então é para encher os dias mais fracos e para os clientes que se vão perdendo. Quais são os dias mais calmos?"
+    ]),
+    objecao("\"Isso é com inteligência artificial?\"", [
+      "Uso ferramentas, sim, como toda a gente na área. O que importa é que publico todas as semanas e respondo pelo resultado."
+    ], "Se perguntarem, diz a verdade."),
+    objecao("Não está o responsável", [
+      "Pode dizer-lhe que passei? Deixo o meu cartão. Qual é o melhor número para lhe enviar os vídeos que fiz?"
+    ], "Depois envia \"Não estava o responsável\" no separador Seguir.")
+  );
+}
+function diaVolta(){
+  const d = new Date(); d.setDate(d.getDate() + 3); if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+  return d.toLocaleDateString("pt-PT",{weekday:"long", day:"numeric", month:"long"});
+}
+
+// ---------------------------------------------------------------- MOSTRAR
+function vMostrar(){
+  const l = lead;
+  const reels = el("div",{className:"reels"}, ...l.videos.map(([f]) => {
+    const [t,s] = VIDEO_TXT[f];
+    return el("div",{className:"reel"},
+      el("video",{src:`../${l.slug}/reels/${f}.mp4`,poster:`../${l.slug}/reels/${f}.jpg`,controls:true,preload:"none",playsInline:true}),
+      el("b",{textContent:t}), el("span",{textContent:s}));
+  }));
+  $("v-mostrar").append(
+    card(eyebrow(`Vídeos feitos para ${l.falar}`), el("p",{className:"mute",textContent:l.ig ? "Feitos com as fotos do Instagram deles. A música junta-se no Instagram ao publicar." : "Animados, feitos sem fotos. A música junta-se no Instagram ao publicar."}), reels),
+    card(eyebrow("Site"), el("p",{textContent:"Serviços, morada, horário e botão para ligar."}),
+      el("div",{className:"btns"}, el("a",{className:"btn forte",href:l.demo,target:"_blank",rel:"noopener",textContent:"Abrir o site"}))),
+    card(eyebrow("Página para enviar ao cliente"), el("p",{className:"mute",textContent:"Os 2 vídeos e o site numa página só. É o link das mensagens do separador Seguir."}),
+      el("div",{className:"btns"}, el("a",{className:"btn",href:linkVideos(l),target:"_blank",rel:"noopener",textContent:"Ver a página"}), copiarBtn(linkVideos(l),"Copiar link")))
+  );
+}
+
+// ---------------------------------------------------------------- CONTAS
+function vContas(){
+  const l = lead, R = RAMO[l.ramo], c = R.calc, auto = l.ramo === "auto";
+  const campo = (k, txt, v) => el("label",{htmlFor:"c-"+k}, txt, el("input",{id:"c-"+k,type:"number",inputMode:"decimal",value:v}));
+  $("v-contas").append(
+    card(eyebrow("Calculadora"), el("p",{className:"mute"},"Pergunta e escreve os números ", el("b",{textContent:"deles"}),". Os valores que lá estão são só exemplo para ",R.plural,".")),
+    el("div",{className:"card calc"}, el("h3",{}, "1 · Clientes novos ", el("span",{id:"r1",style:"float:right;color:var(--ok)"})),
+      campo("valor", `Quanto custa ${R.servico} (€)`, c.valor),
+      campo("freq", auto ? "Visitas por mês de um cliente (0,17 = 2 por ano)" : "Quantas vezes por mês volta um cliente", c.freq),
+      campo("novos", "Clientes novos por mês com vídeos e anúncios", c.novos)),
+    el("div",{className:"card calc"}, el("h3",{}, "2 · Agenda vazia ", el("span",{id:"r2",style:"float:right;color:var(--ok)"})),
+      campo("vagas", auto ? "Carros a mais por semana que cabiam na oficina" : "Vagas vazias por semana", c.vagas),
+      el("p",{className:"mute",style:"font-size:14px",textContent:"Conta-se metade como preenchida com publicações e anúncios nos dias fracos."})),
+    el("div",{className:"card calc"}, el("h3",{}, "3 · Tempo deles ", el("span",{id:"r3",style:"float:right;color:var(--ok)"})),
+      campo("horas", "Horas por semana com redes e mensagens", c.horas),
+      campo("hora", "Quanto ganha por hora a trabalhar (€)", c.hora)),
+    el("div",{className:"total"}, el("div",{className:"eyebrow",style:"color:inherit;opacity:.8",textContent:"O que ganham por mês"}),
+      el("div",{className:"v",id:"tot"}), el("div",{id:"tots",style:"font-size:14px;opacity:.85"})),
+    card(eyebrow("E o preço"), el("p",{}, el("b",{id:"pct",style:"font-size:22px"}), " do que ganham · ", el("b",{textContent:`${PRECO}€/mês`})),
+      el("div",{className:"barra"}, el("i",{id:"bar"})), el("p",{className:"ok",id:"fica"}), el("p",{className:"mute",id:"bastam"}))
+  );
+  document.querySelectorAll(".calc input").forEach(i => i.addEventListener("input", calc));
+  calc();
+}
+function calc(){
+  const n = k => parseFloat(($("c-"+k).value||"").replace(",", ".")) || 0, sem = 4.3;
+  const novos = n("novos") * n("valor") * n("freq");
+  const vagas = n("vagas") * sem * n("valor") / 2;
+  const tempo = n("horas") * sem * n("hora");
+  const total = novos + vagas + tempo;
+  $("r1").textContent = "+"+eur(novos); $("r2").textContent = "+"+eur(vagas); $("r3").textContent = "+"+eur(tempo);
+  $("tot").textContent = eur(total);
+  $("tots").textContent = `${eur(novos)} clientes novos + ${eur(vagas)} agenda + ${eur(tempo)} tempo`;
+  const p = total > 0 ? PRECO/total*100 : 0;
+  $("pct").textContent = (p<1 ? "<1" : Math.round(p)) + "%";
+  $("bar").style.width = Math.min(100,p) + "%";
+  $("fica").textContent = total > PRECO ? `Pagam ${PRECO}€ e ficam com ${eur(total-PRECO)} a mais por mês.` : "Com estes números ainda não compensa. Pergunta pelos dias vazios.";
+  const porCliente = n("valor") * n("freq");
+  const b = porCliente > 0 ? Math.ceil(PRECO / porCliente) : 0;
+  $("bastam").textContent = b ? `Bastam ${b} ${b === 1 ? "cliente novo fiel" : "clientes novos fiéis"} por mês para pagar os ${PRECO}€.` : "";
+}
+
+// ---------------------------------------------------------------- SEGUIR (WhatsApp)
+function mensagens(l){
+  const link = linkVideos(l), nome = MIGUEL.split(" ")[0];
+  return [
+    ["hoje","Hoje, depois da visita","Logo a seguir a sair da loja.",
+      `Olá, é o ${nome}, da Praça Digital. Obrigado pelo tempo de hoje!\n\nComo combinado, aqui estão os 2 vídeos e o site que fiz para ${nomeCom(l)}:\n${link}\n\nSe quiser avançar, é só responder a esta mensagem.`],
+    ["ausente","Não estava o responsável","Para o número que te deram ou o da loja.",
+      `Olá, é o ${nome}, da Praça Digital. Passei hoje ${l.ramo === "auto" ? "na oficina" : "no espaço"} e deixei o meu cartão.\n\nFiz 2 vídeos e um site para ${nomeCom(l)}, pode ver aqui:\n${link}\n\nPosso passar aí 10 minutos esta semana para explicar?`],
+    ["d2","Dia 2: conseguiu ver?","2 dias depois, se não responderam.",
+      `Olá, é o ${nome}. Conseguiu ver os vídeos? ${link}\n\nSe quiser, passo aí para lhe mostrar como ficava um mês de publicações. Que dia dá mais jeito?`],
+    ["d7","Dia 7: última mensagem","Uma semana depois. É a última.",
+      `Olá, é o ${nome}. Não quero insistir, por isso é a última mensagem.\n\nSe fizer sentido, começo já esta semana.\n\nSe não for altura, responda só NÃO e não volto a contactar. Obrigado!`],
+    ["sim","Depois do sim","Confirma por escrito o que combinaram.",
+      `Combinado! Fica assim:\n\n• ${PRECO}€ por mês: site, Google Maps, 12 vídeos por mês no Instagram e no Facebook, e gestão dos anúncios.\n• Os anúncios pagam-se à parte, diretamente à Meta, com o vosso cartão.\n• O 1.º mês paga-se agora por MB WAY para ${MIGUEL}, ${TEL_MIGUEL}. Depois, no dia 1 de cada mês.\n\nPara confirmar, responda ACEITO. Obrigado pela confiança!`]
+  ];
+}
+function vSeguir(){
+  const l = lead;
+  $("v-seguir").append(card(eyebrow("Mensagens de seguimento"),
+    el("p",{className:"mute",textContent:"Copiar ou abrir no WhatsApp com o texto já escrito. \"Enviei\" guarda a data neste telemóvel."}),
+    movel(l) ? null : nota(`O número ${l.telefone || ""} não é telemóvel. Pede o telemóvel do responsável e escreve-o aqui:`),
+    movel(l) ? null : outroNumero(l)));
+  for (const [k, titulo, quando, texto] of mensagens(l)) {
+    const chave = `montra-env-${l.id}-${k}`;
+    const data = ler(chave, null);
+    const estado = el("span",{className:"estado",textContent: data ? `Enviada a ${new Date(data).toLocaleDateString("pt-PT")}` : ""});
+    const num = () => (ler(`montra-tel-${l.id}`, "") || digitos(l)).replace(/\D/g,"");
+    const wa = el("a",{className:"btn forte",target:"_blank",rel:"noopener",textContent:"Abrir no WhatsApp"});
+    wa.addEventListener("click", () => { wa.href = `https://wa.me/351${num()}?text=${encodeURIComponent(texto)}`; });
+    wa.href = `https://wa.me/351${num()}?text=${encodeURIComponent(texto)}`;
+    const marcar = el("button",{type:"button",className:"btn",textContent:"Enviei"});
+    marcar.addEventListener("click", () => { const agora = new Date().toISOString(); guardar(chave, agora); estado.textContent = `Enviada a ${new Date(agora).toLocaleDateString("pt-PT")}`; });
+    $("v-seguir").append(card(el("div",{className:"linha"}, el("h2",{textContent:titulo}), estado),
+      el("p",{className:"mute",textContent:quando}), el("p",{className:"msg",textContent:texto}),
+      el("div",{className:"btns"}, wa, copiarBtn(texto,"Copiar"), marcar)));
+  }
+}
+function outroNumero(l){
+  const k = `montra-tel-${l.id}`;
+  const inp = el("input",{type:"tel",value:ler(k,""),placeholder:"9xx xxx xxx",style:"width:100%;min-height:44px;font:700 16px var(--body);padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)"});
+  inp.addEventListener("input", () => guardar(k, inp.value));
+  return inp;
+}
+
+// ---------------------------------------------------------------- FECHAR
+const LISTA = [
+  "Receber o 1.º mês por MB WAY",
+  "Combinar o pagamento no dia 1 (transferência periódica ou pedido de MB WAY)",
+  "Assinar o contrato (2 cópias)",
+  "Acesso ao Instagram e ao Facebook pelo Meta Business Suite (sem palavra-passe)",
+  "Criar ou reclamar a ficha do Google Maps e pôr-me como gestor",
+  "Combinar como me enviam fotos e vídeos (WhatsApp ou pasta do Google Drive)",
+  "Pedir os preços dos serviços e o horário certo para o site",
+  "Combinar a oferta do 1.º anúncio e montá-lo com o cartão deles (5€/dia, 7 dias, raio de 5 km)",
+  "Pedir 3 fotos da fachada e da entrada"
+];
+function vFechar(){
+  const l = lead, k = `montra-lista-${l.id}`, feitos = ler(k, {});
+  const lista = card(eyebrow("Depois do sim: checklist"));
+  LISTA.forEach((item,i) => {
+    const cb = el("input",{type:"checkbox",id:`l${i}`,checked:!!feitos[i]});
+    const lab = el("label",{className:"check"+(feitos[i]?" feito":""),htmlFor:`l${i}`}, cb, el("span",{textContent:item}));
+    cb.addEventListener("change",()=>{ feitos[i]=cb.checked; lab.classList.toggle("feito",cb.checked); guardar(k, feitos); });
+    lista.append(lab);
+  });
+  const tut = (t, itens, extra) => el("details",{className:"card tut"}, el("summary",{textContent:t}), el("ol",{}, ...itens.map(x => el("li",{innerHTML:x}))), extra ? el("p",{className:"mute",textContent:extra}) : null);
+  $("v-fechar").append(
+    card(eyebrow("Preço"), el("dl",{className:"kv"},
+      el("dt",{textContent:"Mensal"}), el("dd",{textContent:`${PRECO}€, no dia 1`}),
+      el("dt",{textContent:"Inclui"}), el("dd",{textContent:"Site, Google Maps, 12 vídeos/mês no Instagram e no Facebook, anúncios geridos e relatório mensal"}),
+      el("dt",{textContent:"Anúncios"}), el("dd",{textContent:"Orçamento à parte, pago por eles à Meta (~5€/dia)"}),
+      el("dt",{textContent:"Para ti"}), el("dd",{textContent:`${eur(PRECO*12)} por ano por cliente`}))),
+    card(eyebrow("Como receber"), el("ul",{},
+      el("li",{}, el("b",{textContent:"Hoje: "}), `1.º mês por MB WAY para ${TEL_MIGUEL}.`),
+      el("li",{}, el("b",{textContent:"Todos os meses: "}), `transferência periódica no banco deles para o teu IBAN, ${PRECO}€ no dia 1. Cancelam quando quiserem.`),
+      el("li",{}, el("b",{textContent:"Alternativa: "}), "no dia 1, \"Pedir dinheiro\" no MB WAY.")),
+      nota("Passa recibo verde de cada pagamento. Uma empresa pode pedir fatura com o NIF dela.")),
+    lista,
+    card(eyebrow("Tutoriais (vêm da app da Leti)"), el("p",{className:"mute",textContent:"Toca num título para abrir."})),
+    tut("Google Maps (perfil da empresa)", [
+      "Com a conta Google <b>deles</b>: <b>business.google.com</b> ou Google Maps → O seu Perfil da Empresa.",
+      "Se a ficha já existe (tem avaliações), escolhe <b>Reclamar esta empresa</b> em vez de criar outra.",
+      "Categoria certa, morada e pino na porta, telefone e o link do site.",
+      "Verificação: costuma pedir um <b>vídeo</b> sem cortes da rua, da fachada, do interior e de alguém a abrir a porta.",
+      "Depois: horário, serviços com preço, descrição e 10 ou mais fotos.",
+      "Perfil → ⋮ → <b>Gestores da empresa</b> → o teu email → Gestor."]),
+    tut("Acesso ao Instagram e Facebook (sem palavra-passe)", [
+      "Precisam de uma <b>Página do Facebook</b> e de o Instagram ser conta <b>Profissional</b>.",
+      "Instagram → Definições → <b>Centro de contas</b> → ligar à Página.",
+      "<b>business.facebook.com</b> → Definições → Pessoas → Adicionar → o teu email → conteúdo, mensagens, anúncios e estatísticas.",
+      "Aceitas o convite e passas a agendar no Meta Business Suite."]),
+    tut("Agendar os vídeos", [
+      "Meta Business Suite → <b>Criar → Reel</b> → carrega o vídeo.",
+      "Instagram e Facebook, legenda com \"Barreiro\" na primeira linha.",
+      "Junta a música da biblioteca do Instagram (dá mais alcance).",
+      "<b>Agendar</b> 3 por semana (ex.: seg, qua e sex às 19:00)."]),
+    tut("1.º anúncio (Barreiro, 5 km)", [
+      "Abre o melhor vídeo → <b>Promover</b> → objetivo <b>Mais mensagens</b> → WhatsApp.",
+      "Público próprio → Localizações → pino na morada deles → <b>raio de 5 km</b>.",
+      "5€/dia durante 7 dias, com data de fim. Pago com o <b>cartão deles</b>, escrito por eles.",
+      "Mede o <b>custo por conversa</b>; abaixo de 4€ é bom. Não mexas nos primeiros 2–3 dias."],
+      "Nunca escolhas \"Portugal\" ou \"Lisboa\": usa sempre o pino com raio.")
+  );
+}
+
+// ---------------------------------------------------------------- arranque
+function preencherEscolha(){
+  const grupos = {barbeiro:"Barbearias", cabelo:"Cabeleireiros", estetica:"Estética", unhas:"Unhas e beleza", auto:"Oficinas"};
+  for (const [r, rot] of Object.entries(grupos)) {
+    const og = el("optgroup",{label:rot});
+    LEADS.filter(l => l.ramo === r).forEach(l => og.append(el("option",{value:l.id,textContent:l.nome})));
+    if (og.children.length) $("escolha").append(og);
+  }
+  $("escolha").addEventListener("change", e => escolher(e.target.value));
+}
+function aplicarTema(t){ document.documentElement.setAttribute("data-theme", t); $("tema").textContent = t === "dark" ? "Claro" : "Escuro"; }
+let tema = ler("montra-tema", "light"); aplicarTema(tema);
+$("tema").addEventListener("click", () => { tema = tema === "dark" ? "light" : "dark"; aplicarTema(tema); guardar("montra-tema", tema); });
+$("selo").textContent = `${PRECO}€/mês`;
+document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => irPara(b.dataset.v)));
+preencherEscolha();
+function doEndereco(){
+  const [hId, hV] = decodeURIComponent(location.hash.slice(1)).split("/");
+  if (lead && hId === lead.id) { if (hV !== vista) irPara(VISTAS.includes(hV) ? hV : "lead"); return; }
+  escolher(hId || ler("montra-ultima", LEADS[0].id), hV || "lead");
+}
+window.addEventListener("hashchange", doEndereco);
+doEndereco();
+</script>
+</body>
+</html>
