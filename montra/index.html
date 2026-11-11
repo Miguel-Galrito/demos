@@ -85,7 +85,11 @@ table{border-collapse:collapse;width:100%;font-size:14.5px}
 td,th{padding:8px 6px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
 th{color:var(--mute);font-weight:600}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+/* Dentro da app de terreno (?embed=1): a lead vem da ficha, por isso esconde o seletor. */
+html.embed header.topo{position:static}
+html.embed .escolha-lead{display:none}
 </style>
+<script>if (/[?&]embed=1/.test(location.search)) document.documentElement.classList.add("embed");</script>
 </head>
 <body>
 <div class="wrap">
@@ -97,8 +101,8 @@ th{color:var(--mute);font-weight:600}
         <span class="selo" id="selo"></span>
       </div>
     </div>
-    <label for="escolha" class="mute" style="font-size:13px;margin-bottom:-6px">Lead</label>
-    <select id="escolha"></select>
+    <label for="escolha" class="mute escolha-lead" style="font-size:13px;margin-bottom:-6px">Lead</label>
+    <select id="escolha" class="escolha-lead"></select>
   </header>
 
   <section id="v-lead" class="vista"></section>

@@ -455,6 +455,11 @@
   /* Ficha: folha em baixo no telemóvel, painel à direita no computador. */
   #ficha { position: fixed; z-index: 2000; left: 0; right: 0; bottom: 0; max-height: 62%; overflow-y: auto; padding: 0 max(0px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(0px, env(safe-area-inset-left, 0px)); background: var(--card); border-radius: 22px 22px 0 0; box-shadow: 0 -6px 24px rgba(28, 38, 48, .25); }
   #ficha .folha-cab { position: sticky; top: 0; z-index: 1; }
+  #montra { position: fixed; inset: 0; z-index: 3000; background: var(--card); display: grid; grid-template-rows: auto 1fr; }
+  #montra[hidden] { display: none; }
+  #montra .montra-cab { display: flex; align-items: center; gap: 12px; padding: max(8px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px)); border-bottom: 1px solid var(--line); }
+  #montra .montra-cab strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #montra iframe { width: 100%; height: 100%; border: 0; display: block; }
 
   #toast { position: fixed; z-index: 3000; left: 50%; bottom: calc(68px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 12px; align-items: center; width: min(92%, 460px); padding: 10px 14px; transform: translateX(-50%); color: var(--card); background: var(--ink); border-radius: 10px; font-weight: 600; box-shadow: 0 6px 20px rgba(0, 0, 0, .35); }
   #toast span { flex: 1; min-width: 0; }
@@ -528,6 +533,13 @@
     <section id="vista-contas" class="vista" hidden></section>
   </main>
   <aside id="ficha" aria-label="Ficha do lead" hidden></aside>
+  <section id="montra" aria-label="Apresentação do lead" hidden>
+    <div class="montra-cab">
+      <button type="button" class="botao contorno" id="montra-voltar">Voltar</button>
+      <strong id="montra-nome"></strong>
+    </div>
+    <iframe id="montra-quadro" title="Apresentação: vídeos, site, guião, contas e seguimento"></iframe>
+  </section>
   <div id="toast" role="status" hidden></div>
 </div>
 
@@ -1069,14 +1081,37 @@
       `${factoAvaliacoes(lead)} · ${resumoPresenca(lead)}`
     );
   }
-  function blocoAcoes(lead) {
+  /* ---------- Apresentação (Montra): vídeos, site, guião a 170€, contas e seguimento por WhatsApp ---------- */
+  // Slugs das demos que têm vídeos (demos/<slug>/reels); preenchido por preparar_app.py.
+  const MONTRA = new Set(["a-sua-barbearia-classica-barbeiro-top-style", "alice-cardoso-lda", "ana-ferreira-estetica-e-bem-estar", "andreia-cabeleireiro-e-estetica", "atelier-do-barbeiro", "auto-germano-candido-sa", "barbearia-costa-barbeiro", "barbearia-el-hombre", "barbearia-estacao-vip", "barbearia-lebrinhas", "cabeleireiro-barreiro-catiagomeshairstylist", "cabelo-e-alma", "camai-centro-de-estetica-avancada-barreiro", "catiacoelho-hairstudio", "d-d-barber", "eliane-estetica-e-cabeleireiro", "escultora-de-imagem", "gloria-cabeleireiros", "hair-groove", "ligia-carina-centro-estetica", "luis-anjos-hairstylist", "luis-daniel-oficina-auto", "made-by-tania-hair-design-beauty", "paula-vidotto-beauty", "phpeel-estetica", "ricardus", "sanchez-barber", "stilothay-estetica", "studio-sensie", "unhas-barreiro", "villainconcept"]);
+  const slugDe = (lead) => ((lead.demo || "").match(/\/demos\/([^/?#]+)/) || [])[1] || "";
+  const temMontra = (lead) => MONTRA.has(slugDe(lead));
+  function abrirMontra(lead) {
+    $("montra-nome").textContent = lead.falar || lead.nome;
+    $("montra-quadro").src = `../montra/?embed=1#${encodeURIComponent(lead.id)}`;
+    $("montra").hidden = false;
+    try { history.pushState({ montra: lead.id }, ""); } catch (e) {}
+  }
+  function fecharMontra() {
+    if ($("montra").hidden) return;
+    $("montra").hidden = true;
+    $("montra-quadro").src = "about:blank";
+  }
+  function botaoMontra(lead, extra = "") {
+    return criar("button", { type: "button", className: `botao forte ${extra}`.trim(), textContent: "Apresentação", onclick: () => abrirMontra(lead) });
+  }
+  function botaoDemo(lead, classe) {
     const demo = urlSegura(lead.demo);
+    return demo
+      ? criar("a", { className: classe, href: demo, target: "_blank", rel: "noopener", textContent: "Abrir demo" })
+      : criar("span", { className: "botao largo", textContent: "Sem demo" });
+  }
+  function blocoAcoes(lead) {
     const numero = soDigitos(lead);
     const bloqueado = lead.estado === "nao-contactar";
     const acoes = criar("div", { className: "botoes duplas" },
-      demo
-        ? criar("a", { className: "botao forte largo", href: demo, target: "_blank", rel: "noopener", textContent: "Abrir demo" })
-        : criar("span", { className: "botao largo", textContent: "Sem demo" }),
+      temMontra(lead) ? botaoMontra(lead, "largo") : null,
+      botaoDemo(lead, temMontra(lead) ? "botao contorno" : "botao forte largo"),
       criar("a", { className: "botao contorno", href: linkRota(lead), target: "_blank", rel: "noopener", textContent: "Google Maps" }),
       typeof lead.lat === "number" ? criar("a", { className: "botao contorno", href: linkCitymapper(lead), target: "_blank", rel: "noopener", textContent: "Citymapper" }) : null,
       numero && !bloqueado ? criar("a", { className: "botao contorno", href: `tel:+351${numero}`, textContent: "Ligar" }) : null,
@@ -1471,6 +1506,10 @@
       )
     );
   }
+  // O "voltar" do telemóvel fecha a Apresentação em vez de sair da app.
+  window.addEventListener("popstate", fecharMontra);
+  $("montra-voltar").addEventListener("click", () => { if (history.state && history.state.montra) history.back(); else fecharMontra(); });
+
   function abrirFicha(id) {
     estado.fichaId = id;
     $("ficha").ultimoHtml = null;
@@ -2223,12 +2262,11 @@
     const notaSeguinte = seguinte ? criar("p", { className: "a-seguir", textContent: `A seguir: ${seguinte.lead.falar || seguinte.lead.nome}, às ${horaDe(seguinte.chega)}` }) : null;
     let corpo;
     if (naLoja) {
-      const demo = urlSegura(lead.demo);
       corpo = [
         criar("h3", { textContent: lead.nome }),
         blocoDica(lead),
         criar("div", { className: "botoes duplas" },
-          demo ? criar("a", { className: "botao forte", href: demo, target: "_blank", rel: "noopener", textContent: "Abrir demo" }) : criar("span", { className: "botao", textContent: "Sem demo" }),
+          temMontra(lead) ? botaoMontra(lead) : botaoDemo(lead, "botao forte"),
           criar("button", { type: "button", className: "botao contorno", textContent: "Guião", onclick: () => abrirGuiao(lead.id) })
         ),
         blocoResultados(lead),
