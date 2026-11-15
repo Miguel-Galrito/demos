@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16213a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Leti's Studio">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icone-192.png">
+<link rel="apple-touch-icon" href="icone-180.png">
+<title>Leti's Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noite:#16213a; --noite2:#24365e; --prata:#e4e7ee; --creme:#f6f2ec; --papel:#fffdf9;
+  --ouro:#b8935a; --ouro2:#d9bf8c; --tinta:#1b2236; --mute:#6b7184; --linha:#e8e2d8;
+  --verde:#2e7d5b; --verde-bg:#e6f3ec; --ambar:#a86a12; --ambar-bg:#fbf0dc;
+  --display:"Cormorant Garamond", Georgia, serif; --corpo:Manrope, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--creme);color:var(--tinta);font-family:var(--corpo);font-size:16px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+.topo{position:sticky;top:0;z-index:5;background:var(--noite);color:var(--prata);padding:calc(env(safe-area-inset-top,0px) + 14px) max(18px,env(safe-area-inset-right,0px)) 16px max(18px,env(safe-area-inset-left,0px));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.topo img{height:40px;display:block}
+.topo .sub{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro2)}
+main{max-width:640px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;gap:14px}
+h1,h2{font-family:var(--display);font-weight:600;margin:0;line-height:1.1}
+h1{font-size:32px} h2{font-size:26px}
+.eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ouro)}
+.cartao{background:var(--papel);border:1px solid var(--linha);border-radius:20px;padding:16px;display:grid;gap:10px}
+.mute{color:var(--mute)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:14px;border:1px solid var(--linha);background:var(--papel);font-weight:700;cursor:pointer;text-decoration:none;color:var(--tinta)}
+.btn.forte{background:var(--noite);color:#fff;border-color:var(--noite)}
+.btn.ouro{background:linear-gradient(135deg,var(--ouro),var(--ouro2));color:#fff;border:0}
+.btn.wa{background:#25d366;color:#fff;border:0}
+.btn.peq{min-height:38px;padding:6px 12px;font-size:14px;border-radius:11px}
+.btn:disabled{opacity:.45}
+.linha-btns{display:flex;gap:8px;flex-wrap:wrap}
+.campo{display:grid;gap:4px;font-size:14px;color:var(--mute)}
+.campo input,.campo select,.campo textarea{width:100%;padding:12px 14px;border:1px solid var(--linha);border-radius:12px;background:#fff;font-size:16px;color:var(--tinta)}
+.pesquisa{display:flex;gap:8px}
+.pesquisa input{flex:1;min-width:0;padding:13px 16px;border:1px solid var(--linha);border-radius:14px;background:#fff;font-size:16px}
+.filtros{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.filtros button{flex:none;border:1px solid var(--linha);background:var(--papel);border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:700;color:var(--mute)}
+.filtros button[aria-pressed="true"]{background:var(--noite);border-color:var(--noite);color:#fff}
+.lista{display:grid;gap:10px}
+.cliente{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;background:var(--papel);border:1px solid var(--linha);border-radius:18px;padding:12px 14px;text-align:left;width:100%;cursor:pointer}
+.ini{width:46px;height:46px;border-radius:50%;background:var(--noite);color:var(--ouro2);display:grid;place-items:center;font-family:var(--display);font-size:22px;font-weight:600}
+.cliente b{display:block;font-size:16px}
+.cliente small{color:var(--mute);font-size:13px}
+.mini{display:flex;gap:3px;margin-top:5px}
+.mini i{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--ouro);display:block}
+.mini i.c{background:var(--ouro)}
+.etapa{font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:999px;background:#eef0f5;color:var(--noite2);white-space:nowrap}
+.etapa.oferta{background:var(--ambar-bg);color:var(--ambar)}
+.etapa.fiel{background:var(--verde-bg);color:var(--verde)}
+.etapa.sumida{background:#f6e7e7;color:#a03b3b}
+.vazio{text-align:center;padding:28px 16px;color:var(--mute)}
+/* cartão de fidelização visual */
+.fid{background:linear-gradient(150deg,var(--noite),var(--noite2));color:var(--prata);border-radius:22px;padding:20px;display:grid;gap:14px;box-shadow:0 14px 34px rgba(22,33,58,.25)}
+.fid .nome{font-family:var(--display);font-size:30px;font-weight:600;line-height:1}
+.selos{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.selo{aspect-ratio:1;border-radius:50%;border:1.5px solid rgba(217,191,140,.6);display:grid;place-items:center;font-size:12px;color:rgba(228,231,238,.5);transition:transform .25s}
+.selo.c{background:radial-gradient(circle at 35% 30%,#ecd9b0,var(--ouro));border-color:var(--ouro2);color:var(--noite);transform:scale(1.02)}
+.selo.c img{width:62%;opacity:.9}
+.selo.premio{border-style:dashed;color:var(--ouro2);font-weight:800;font-size:10.5px;text-align:center;line-height:1.1}
+.fid .pe{display:flex;justify-content:space-between;font-size:13px;color:var(--ouro2)}
+.hist{display:grid;gap:6px;font-size:14px}
+.hist div{display:flex;justify-content:space-between;border-bottom:1px solid var(--linha);padding:6px 0}
+nav.abas{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--papel);border-top:1px solid var(--linha);display:grid;grid-template-columns:repeat(3,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.abas button{background:none;border:0;min-height:62px;display:grid;place-items:center;gap:2px;font-size:11.5px;font-weight:800;color:var(--mute)}
+nav.abas svg{width:24px;height:24px}
+nav.abas button[aria-current="page"]{color:var(--noite)}
+nav.abas button[aria-current="page"] svg{color:var(--ouro)}
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:7;width:60px;height:60px;border-radius:50%;background:var(--noite);color:#fff;border:0;font-size:32px;box-shadow:0 10px 24px rgba(22,33,58,.35)}
+.folha{position:fixed;inset:0;z-index:20;background:rgba(14,20,36,.45);display:flex;align-items:flex-end;justify-content:center}
+.folha>div{background:var(--creme);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:18px max(16px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;gap:14px}
+.folha .pega{width:44px;height:5px;border-radius:3px;background:#d8d1c4;margin:0 auto}
+.passos{counter-reset:p;display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.passos li{counter-increment:p;display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+.passos li::before{content:counter(p);width:30px;height:30px;border-radius:50%;background:var(--noite);color:var(--ouro2);display:grid;place-items:center;font-weight:800;font-size:14px}
+.dica{background:var(--ambar-bg);color:var(--ambar);border-radius:14px;padding:12px 14px;font-weight:600;font-size:14.5px}
+.ok{background:var(--verde-bg);color:var(--verde);border-radius:14px;padding:12px 14px;font-weight:600;font-size:14.5px}
+.numeros{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.numeros div{background:var(--papel);border:1px solid var(--linha);border-radius:16px;padding:12px 6px}
+.numeros b{display:block;font-family:var(--display);font-size:30px;line-height:1;color:var(--noite)}
+.numeros span{font-size:12px;color:var(--mute)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));background:var(--noite);color:#fff;padding:12px 18px;border-radius:14px;font-weight:700;z-index:30;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.entrar{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(160deg,var(--noite),var(--noite2))}
+.entrar>div{width:100%;max-width:380px;display:grid;gap:16px;text-align:center;color:var(--prata)}
+.entrar input{padding:15px;border-radius:14px;border:0;font-size:18px;text-align:center;letter-spacing:.06em;text-transform:uppercase}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* Leti's Studio: cartão de fidelização digital + guia de anúncios.
+   Dados na Supabase (tabela "fidelizacao", só acessível com o código da Letícia). */
+const URL_SB = "https://gickhwsqogobhfldcnln.supabase.co";
+const CHAVE = "sb_publishable_k3fU8YCUPf6xWg80i1sKUA_3JX2r-in";
+const SERVICOS = ["Sobrancelhas com henna", "Design de sobrancelhas", "Micropigmentação", "Threading", "Pestanas", "Depilação a laser", "Outro"];
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, props = {}, ...filhos) => { const e = Object.assign(document.createElement(tag), props); e.append(...filhos.filter(f => f != null && f !== false)); return e; };
+const hoje = () => new Date().toISOString().slice(0, 10);
+const dataPt = (d) => new Date(d + "T12:00:00").toLocaleDateString("pt-PT", { day: "numeric", month: "short" });
+const ler = (k, v) => { try { const x = localStorage.getItem(k); return x ? JSON.parse(x) : v; } catch (e) { return v; } };
+const gravar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+let codigo = ler("leti-codigo", "");
+let clientes = ler("leti-clientes", {});
+let config = Object.assign({ meta: 10, oferta: "Oferta especial" }, ler("leti-config", {}));
+let estado = { aba: "clientes", filtro: "todas", procura: "" };
+
+// código pode vir no link do atalho: .../leti-app/#LETI-XXXX
+if (location.hash.length > 3) { codigo = decodeURIComponent(location.hash.slice(1)).toUpperCase(); gravar("leti-codigo", codigo); history.replaceState(null, "", location.pathname); }
+
+async function rpc(fn, args) {
+  const r = await fetch(`${URL_SB}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: CHAVE, "Content-Type": "application/json" }, body: JSON.stringify(args) });
+  if (r.status === 403 || r.status === 401) throw new Error("codigo");
+  if (!r.ok) throw new Error("rede");
+  const t = await r.text(); return t ? JSON.parse(t) : null;
+}
+async function carregar() {
+  const docs = await rpc("fid_ler", { p_codigo: codigo });
+  clientes = {};
+  docs.forEach(d => { if (d.id === "_config") config = Object.assign(config, d.dados); else clientes[d.id] = d.dados; });
+  gravar("leti-clientes", clientes); gravar("leti-config", config);
+}
+let fila = ler("leti-fila", []);
+async function enviarFila() {
+  while (fila.length) {
+    const op = fila[0];
+    try {
+      if (op.apagar) await rpc("fid_apagar", { p_codigo: codigo, p_id: op.id });
+      else await rpc("fid_guardar", { p_codigo: codigo, p_id: op.id, p_dados: op.dados });
+      fila.shift(); gravar("leti-fila", fila);
+    } catch (e) { aviso("Sem internet: fica guardado e envia depois"); return; }
+  }
+}
+function guardarCliente(c) { clientes[c.id] = c; gravar("leti-clientes", clientes); fila.push({ id: c.id, dados: c }); gravar("leti-fila", fila); enviarFila(); }
+function apagarCliente(id) { delete clientes[id]; gravar("leti-clientes", clientes); fila.push({ id, apagar: true }); gravar("leti-fila", fila); enviarFila(); }
+function guardarConfig() { gravar("leti-config", config); fila.push({ id: "_config", dados: config }); gravar("leti-fila", fila); enviarFila(); }
+
+function aviso(txt) { const t = el("div", { className: "toast", textContent: txt }); document.body.append(t); setTimeout(() => t.remove(), 2600); }
+
+/* ---------- regras ---------- */
+const atuais = (c) => (c.carimbos || []).length;
+const totalVisitas = (c) => (c.carimbos || []).length + (c.historico || []).length;
+const ultimaVisita = (c) => { const t = [...(c.carimbos || []), ...(c.historico || [])].map(v => v.d).sort(); return t[t.length - 1] || c.criada; };
+const diasDesde = (d) => Math.floor((Date.now() - new Date(d + "T12:00:00")) / 864e5);
+function etapa(c) {
+  if (atuais(c) >= config.meta) return ["Oferta pronta", "oferta"];
+  if (totalVisitas(c) && diasDesde(ultimaVisita(c)) > 45) return ["Há muito tempo", "sumida"];
+  if ((c.ofertas || []).length || totalVisitas(c) >= 10) return ["Cliente fiel", "fiel"];
+  if (totalVisitas(c) >= 3) return ["Habitual", ""];
+  return ["Nova", ""];
+}
+function telLimpo(t) { const d = (t || "").replace(/\D/g, ""); return d.length === 9 ? "351" + d : d; }
+function msgWhats(c) {
+  const n = atuais(c), falta = Math.max(0, config.meta - n), nome = (c.nome || "").split(" ")[0];
+  return falta === 0
+    ? `Olá ${nome}! 💙 Completaste o teu cartão de fidelização do Leti's Studio. Tens direito à tua oferta: ${config.oferta}. Quando queres marcar?`
+    : `Olá ${nome}! 💙 Já tens ${n} ${n === 1 ? "carimbo" : "carimbos"} no teu cartão Leti's Studio. Faltam só ${falta} para a tua oferta (${config.oferta}). Queres marcar a próxima?`;
+}
+
+/* ---------- ecrãs ---------- */
+const ICON = {
+  cli: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="8.5" cy="12" r="2"/><path d="M13 10h5M13 14h3"/></svg>',
+  anu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 8a5 5 0 0 1 0 8"/></svg>',
+  aju: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></svg>'
+};
+function render() {
+  const app = $("#app");
+  if (!codigo) return renderEntrar(app);
+  app.replaceChildren(
+    el("header", { className: "topo" },
+      el("div", {}, el("img", { src: "logo-claro.png", alt: "Leti's Studio de Beleza" })),
+      el("div", { className: "sub", textContent: { clientes: "Fidelização", anuncios: "Anúncios", ajuda: "Ajuda" }[estado.aba] })),
+    el("main", { id: "conteudo" }),
+    estado.aba === "clientes" ? Object.assign(el("button", { className: "fab", textContent: "+", ariaLabel: "Nova cliente" }), { onclick: () => abrirFicha(null) }) : null,
+    navAbas());
+  ({ clientes: renderClientes, anuncios: renderAnuncios, ajuda: renderAjuda })[estado.aba]($("#conteudo"));
+}
+function navAbas() {
+  const b = (id, txt, ic) => { const x = el("button", { type: "button" }); x.innerHTML = ICON[ic] + txt; if (estado.aba === id) x.setAttribute("aria-current", "page"); x.onclick = () => { estado.aba = id; render(); scrollTo(0, 0); }; return x; };
+  return el("nav", { className: "abas" }, b("clientes", "Clientes", "cli"), b("anuncios", "Anúncios", "anu"), b("ajuda", "Ajuda", "aju"));
+}
+function renderEntrar(app) {
+  const inp = el("input", { placeholder: "LETI-…", autocomplete: "off", ariaLabel: "Código de acesso" });
+  const btn = el("button", { className: "btn ouro", textContent: "Entrar", type: "button" });
+  const erro = el("p", { style: "color:#f3b4b4;margin:0;min-height:20px" });
+  btn.onclick = async () => {
+    codigo = inp.value.trim().toUpperCase(); btn.disabled = true; erro.textContent = "";
+    try { await carregar(); gravar("leti-codigo", codigo); render(); }
+    catch (e) { erro.textContent = e.message === "codigo" ? "Código errado. Confirma com o Miguel." : "Sem internet. Tenta outra vez."; codigo = ""; btn.disabled = false; }
+  };
+  app.replaceChildren(el("div", { className: "entrar" }, el("div", {},
+    el("img", { src: "logo-claro.png", alt: "Leti's Studio de Beleza", style: "width:78%;margin:0 auto" }),
+    el("p", { textContent: "Escreve o código que o Miguel te deu (só uma vez).", style: "margin:0" }), inp, btn, erro)));
+}
+
+function renderClientes(m) {
+  const lista = Object.values(clientes);
+  const n = (f) => lista.filter(f).length;
+  const prontas = n(c => atuais(c) >= config.meta), sumidas = n(c => etapa(c)[0] === "Há muito tempo");
+  const procura = el("input", { type: "search", placeholder: "Procurar cliente…", value: estado.procura, ariaLabel: "Procurar cliente" });
+  procura.oninput = () => { estado.procura = procura.value; desenharLista(); };
+  const filtros = el("div", { className: "filtros" });
+  [["todas", `Todas (${lista.length})`], ["oferta", `Oferta pronta (${prontas})`], ["sumida", `Há muito tempo (${sumidas})`], ["fiel", "Fiéis"], ["nova", "Novas"]].forEach(([id, txt]) => {
+    const b = el("button", { type: "button", textContent: txt }); b.setAttribute("aria-pressed", String(estado.filtro === id));
+    b.onclick = () => { estado.filtro = id; renderClientes(m); }; filtros.append(b);
+  });
+  const caixa = el("div", { className: "lista" });
+  function desenharLista() {
+    const q = estado.procura.trim().toLowerCase();
+    let v = lista.filter(c => !q || (c.nome || "").toLowerCase().includes(q) || (c.tel || "").includes(q));
+    const mapa = { oferta: "oferta", sumida: "sumida", fiel: "fiel" };
+    if (estado.filtro === "nova") v = v.filter(c => etapa(c)[0] === "Nova");
+    else if (mapa[estado.filtro]) v = v.filter(c => etapa(c)[1] === mapa[estado.filtro]);
+    v.sort((a, b) => (ultimaVisita(b) || "").localeCompare(ultimaVisita(a) || ""));
+    caixa.replaceChildren(...(v.length ? v.map(linhaCliente) : [el("div", { className: "vazio" },
+      lista.length ? "Nenhuma cliente neste filtro." : el("div", {}, el("h2", { textContent: "Ainda sem clientes" }), el("p", { textContent: "Toca no + para criar o primeiro cartão de fidelização." })))]));
+  }
+  desenharLista();
+  m.replaceChildren(
+    el("div", { className: "numeros" },
+      el("div", {}, el("b", { textContent: lista.length }), el("span", { textContent: "clientes" })),
+      el("div", {}, el("b", { textContent: lista.reduce((s, c) => s + totalVisitas(c), 0) }), el("span", { textContent: "visitas" })),
+      el("div", {}, el("b", { textContent: prontas }), el("span", { textContent: "ofertas prontas" }))),
+    el("div", { className: "pesquisa" }, procura), filtros, caixa);
+}
+function linhaCliente(c) {
+  const [et, cls] = etapa(c);
+  const mini = el("div", { className: "mini" }); for (let i = 0; i < config.meta; i++) mini.append(el("i", { className: i < atuais(c) ? "c" : "" }));
+  const b = el("button", { className: "cliente", type: "button" },
+    el("div", { className: "ini", textContent: (c.nome || "?").trim()[0].toUpperCase() }),
+    el("div", {}, el("b", { textContent: c.nome }), el("small", { textContent: `${atuais(c)}/${config.meta} carimbos · última ${dataPt(ultimaVisita(c))}` }), mini),
+    el("span", { className: "etapa " + cls, textContent: et }));
+  b.onclick = () => abrirCliente(c.id); return b;
+}
+
+function folha(...filhos) {
+  const f = el("div", { className: "folha" }, el("div", {}, el("div", { className: "pega" }), ...filhos));
+  f.onclick = (e) => { if (e.target === f) f.remove(); };
+  document.body.append(f); return f;
+}
+function abrirCliente(id) {
+  const c = clientes[id]; if (!c) return;
+  const selos = el("div", { className: "selos" });
+  for (let i = 0; i < config.meta; i++) {
+    const s = el("div", { className: "selo" + (i < atuais(c) ? " c" : "") + (i === config.meta - 1 && i >= atuais(c) ? " premio" : "") });
+    if (i < atuais(c)) { s.textContent = "✓"; s.style.fontSize = "18px"; s.style.fontWeight = "800"; }
+    else s.textContent = i === config.meta - 1 ? "OFERTA" : String(i + 1);
+    selos.append(s);
+  }
+  const servico = el("select", { ariaLabel: "Serviço" }, ...SERVICOS.map(s => el("option", { value: s, textContent: s, selected: s === c.servico })));
+  const pronta = atuais(c) >= config.meta;
+  const f = folha(
+    el("div", { className: "fid" },
+      el("div", { className: "eyebrow", textContent: "Cartão de fidelização", style: "color:var(--ouro2)" }),
+      el("div", { className: "nome", textContent: c.nome }), selos,
+      el("div", { className: "pe" }, el("span", { textContent: `${atuais(c)} de ${config.meta}` }), el("span", { textContent: config.oferta }))),
+    pronta ? el("p", { className: "dica", textContent: `Cartão completo! Oferta: ${config.oferta}.` }) : null,
+    el("label", { className: "campo" }, "Serviço desta visita", servico),
+    el("div", { className: "linha-btns" },
+      pronta
+        ? Object.assign(el("button", { className: "btn ouro", type: "button", textContent: "Usar a oferta e começar cartão novo" }), { onclick: () => {
+            c.historico = [...(c.historico || []), ...(c.carimbos || [])]; c.carimbos = []; c.ofertas = [...(c.ofertas || []), hoje()];
+            guardarCliente(c); f.remove(); aviso("Oferta registada 🤍"); render(); } })
+        : Object.assign(el("button", { className: "btn forte", type: "button", textContent: "+ Carimbo de hoje" }), { onclick: () => {
+            c.carimbos = [...(c.carimbos || []), { d: hoje(), s: servico.value }]; c.servico = servico.value;
+            guardarCliente(c); f.remove(); aviso(atuais(c) >= config.meta ? "Cartão completo! 🎉" : `Carimbo ${atuais(c)} de ${config.meta}`); render(); abrirCliente(id); } }),
+      atuais(c) ? Object.assign(el("button", { className: "btn peq", type: "button", textContent: "Desfazer último" }), { onclick: () => { c.carimbos.pop(); guardarCliente(c); f.remove(); render(); abrirCliente(id); } }) : null),
+    c.tel ? el("a", { className: "btn wa", href: `https://wa.me/${telLimpo(c.tel)}?text=${encodeURIComponent(msgWhats(c))}`, target: "_blank", rel: "noopener", textContent: "Enviar mensagem no WhatsApp" }) : null,
+    el("div", { className: "cartao" },
+      el("div", { className: "eyebrow", textContent: "Visitas" }),
+      el("div", { className: "hist" }, ...([...(c.historico || []), ...(c.carimbos || [])].slice().reverse().slice(0, 15).map(v => el("div", {}, el("span", { textContent: v.s || "Visita" }), el("span", { className: "mute", textContent: dataPt(v.d) }))))),
+      (c.ofertas || []).length ? el("p", { className: "mute", textContent: `Ofertas já usadas: ${(c.ofertas || []).length}` }) : null,
+      c.nota ? el("p", { textContent: "Nota: " + c.nota }) : null),
+    el("div", { className: "linha-btns" },
+      Object.assign(el("button", { className: "btn peq", type: "button", textContent: "Editar dados" }), { onclick: () => { f.remove(); abrirFicha(id); } })));
+}
+function abrirFicha(id) {
+  const c = id ? clientes[id] : { id: "c" + Date.now().toString(36), nome: "", tel: "", nota: "", servico: SERVICOS[0], carimbos: [], historico: [], ofertas: [], criada: hoje() };
+  const nome = el("input", { value: c.nome, autocomplete: "off" }), tel = el("input", { value: c.tel || "", type: "tel", inputMode: "tel" }), nota = el("textarea", { value: c.nota || "", rows: 2 });
+  const comCarimbo = el("input", { type: "checkbox", checked: !id });
+  const f = folha(
+    el("h2", { textContent: id ? "Editar cliente" : "Nova cliente" }),
+    el("label", { className: "campo" }, "Nome", nome),
+    el("label", { className: "campo" }, "Telemóvel (para o WhatsApp)", tel),
+    el("label", { className: "campo" }, "Nota (alergias, preferências…)", nota),
+    !id ? el("label", { style: "display:flex;gap:10px;align-items:center;font-weight:600" }, comCarimbo, "Dar já o 1.º carimbo (visita de hoje)") : null,
+    el("div", { className: "linha-btns" },
+      Object.assign(el("button", { className: "btn forte", type: "button", textContent: "Guardar" }), { onclick: () => {
+        if (!nome.value.trim()) { nome.focus(); return; }
+        Object.assign(c, { nome: nome.value.trim(), tel: tel.value.trim(), nota: nota.value.trim() });
+        if (!id && comCarimbo.checked) c.carimbos = [{ d: hoje(), s: c.servico }];
+        guardarCliente(c); f.remove(); render(); aviso("Guardado"); } }),
+      id ? Object.assign(el("button", { className: "btn peq", type: "button", textContent: "Apagar cliente" }), { onclick: (e) => {
+        if (e.target.dataset.ok) { apagarCliente(id); f.remove(); render(); aviso("Cliente apagada"); }
+        else { e.target.dataset.ok = "1"; e.target.textContent = "Toca outra vez para apagar"; } } }) : null));
+  setTimeout(() => nome.focus(), 50);
+}
+
+function renderAnuncios(m) {
+  m.replaceChildren(
+    el("div", { className: "cartao" },
+      el("div", { className: "eyebrow", textContent: "O plano" }),
+      el("h1", { textContent: "5€ por dia, 8 dias" }),
+      el("p", { className: "mute", textContent: "No 1.º mês, 40€ no total: dá a conhecer o laser às mulheres do Barreiro. O dinheiro sai do teu cartão, diretamente para a Meta." })),
+    el("div", { className: "cartao" },
+      el("div", { className: "eyebrow", textContent: "Passo a passo no Instagram" }),
+      el("ol", { className: "passos" },
+        ...["Abre o Instagram e vai ao Reel que queres mostrar (o do laser).",
+          "Toca em «Promover» por baixo do vídeo.",
+          "Objetivo: escolhe «Mais mensagens» e depois WhatsApp.",
+          "Público: «Criar o teu próprio».",
+          "Localização: «Local» e procura «Rua Stara-Zagora 30A, Barreiro». Põe o raio em 5 km.",
+          "Idade dos 20 aos 55 anos, Mulheres. Não ponhas interesses.",
+          "Orçamento: 5€ por dia. Duração: 8 dias.",
+          "Pagamento: o teu cartão. Revê e toca em «Promover»."].map(t => el("li", {}, el("span", { textContent: t }))))),
+    el("p", { className: "ok", textContent: "5 km apanham o Barreiro, o Lavradio, Santo André e Palhais, e não chegam a Lisboa." }),
+    el("div", { className: "cartao" },
+      el("div", { className: "eyebrow", textContent: "Durante o anúncio" }),
+      el("ul", { style: "margin:0;padding-left:20px;display:grid;gap:6px" },
+        el("li", { textContent: "Não mexas nos primeiros 3 dias. O Instagram está a aprender." }),
+        el("li", { textContent: "A quem te escrever, pergunta «És de que zona?» e anota." }),
+        el("li", { textContent: "Ao fim dos 8 dias, diz ao Miguel quantas mensagens e marcações recebeste." }))),
+    el("p", { className: "dica", textContent: "Se ao fim de 1 semana e meia não estiver a resultar, trocamos de vídeo ou de abordagem." }));
+}
+
+function renderAjuda(m) {
+  const meta = el("input", { type: "number", min: 3, max: 20, value: config.meta, inputMode: "numeric" });
+  const oferta = el("input", { value: config.oferta });
+  m.replaceChildren(
+    el("div", { className: "cartao" },
+      el("div", { className: "eyebrow", textContent: "Como funciona" }),
+      el("ol", { className: "passos" },
+        el("li", {}, el("span", { textContent: "Cliente nova? Toca no + e escreve o nome e o telemóvel." })),
+        el("li", {}, el("span", { textContent: "Em cada visita, abre a cliente e toca em «+ Carimbo de hoje». No cartão de papel, faz o carimbo ou rubrica." })),
+        el("li", {}, el("span", { textContent: "Quando o cartão fica completo, aparece «Oferta pronta». Ofereces e tocas em «Usar a oferta»." })),
+        el("li", {}, el("span", { textContent: "Usa os filtros: «Há muito tempo» mostra quem não vem há mais de 45 dias, para lhe mandares mensagem." })))),
+    el("div", { className: "cartao" },
+      el("div", { className: "eyebrow", textContent: "A tua regra" }),
+      el("label", { className: "campo" }, "Carimbos para a oferta", meta),
+      el("label", { className: "campo" }, "Qual é a oferta?", oferta),
+      Object.assign(el("button", { className: "btn forte", type: "button", textContent: "Guardar regra" }), { onclick: () => {
+        config.meta = Math.max(3, Math.min(20, +meta.value || 10)); config.oferta = oferta.value.trim() || "Oferta especial"; guardarConfig(); aviso("Regra guardada"); } })),
+    el("div", { className: "cartao" },
+      el("div", { className: "eyebrow", textContent: "Pôr no ecrã do telemóvel" }),
+      el("p", { innerHTML: "<b>Android (Chrome):</b> ⋮ no canto → «Adicionar ao ecrã principal»." }),
+      el("p", { innerHTML: "<b>iPhone (Safari):</b> botão Partilhar → «Adicionar ao ecrã principal»." })),
+    el("p", { className: "mute", style: "text-align:center;font-size:13px", textContent: "Os dados ficam guardados na nuvem: mesmo que troques de telemóvel, não se perdem. Dúvidas? Fala com o Miguel." }),
+    Object.assign(el("button", { className: "btn peq", type: "button", textContent: "Sair desta conta", style: "justify-self:center" }), { onclick: () => { localStorage.removeItem("leti-codigo"); codigo = ""; render(); } }));
+}
+
+render();
+if (codigo) { enviarFila().then(() => carregar()).then(render).catch(e => { if (e.message === "codigo") { codigo = ""; gravar("leti-codigo", ""); render(); } }); }
+window.addEventListener("online", () => enviarFila());
+</script>
+</body>
+</html>
