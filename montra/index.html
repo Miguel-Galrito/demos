@@ -283,7 +283,8 @@ function vGuiao(){
     passo("4. O que vi e o 2.º vídeo", null, [
       fraseFalta(l),
       l.videos.length > 1 ? "Fiz mais dois, cada um num formato diferente. Num mês publico 12 assim, sempre a variar: uns mostram o trabalho, outros trazem comentários e outros fazem as pessoas partilhar." : null,
-      "E fiz também o site, com os vossos serviços, a morada e um botão para ligar."
+      "E fiz também o site, com os vossos serviços, a morada e um botão para ligar.",
+      "Já faço isto para o {Leti's Studio}, aqui no Barreiro: pus no Google Maps, fiz o site, o WhatsApp automático, os vídeos e até um cartão de fidelização. Posso mostrar? (separador Mostrar, \"Caso real\")"
     ]),
     passo("5. Contas", "Separador Contas. Deixa-os dizer os números; não sugiras valores.", [
       `Quanto custa ${R.servico}? E quantas vezes por mês volta um cliente fiel?`,
@@ -342,9 +343,35 @@ function vMostrar(){
     card(eyebrow(`Vídeos feitos para ${l.falar}`), el("p",{className:"mute",textContent:l.ig ? "Feitos com as fotos do Instagram deles e músicas que estão a dar nos Reels." : "Animados, feitos sem fotos, com músicas que estão a dar nos Reels."}), reels),
     card(eyebrow("Site"), el("p",{textContent:"Serviços, morada, horário e botão para ligar."}),
       el("div",{className:"btns"}, el("a",{className:"btn forte",href:l.demo,target:"_blank",rel:"noopener",textContent:"Abrir o site"}))),
+    casoLeti(),
     card(eyebrow("Página para enviar ao cliente"), el("p",{className:"mute",textContent:"Os vídeos e o site numa página só. É o link das mensagens do separador Seguir."}),
       el("div",{className:"btns"}, el("a",{className:"btn",href:linkVideos(l),target:"_blank",rel:"noopener",textContent:"Ver a página"}), copiarBtn(linkVideos(l),"Copiar link")))
   );
+}
+
+// Caso real para mostrar a qualquer lead (prova social). Atualizar com resultados quando os houver.
+const CASO = {
+  nome: "Leti's Studio de Beleza", onde: "Barreiro · cliente desde novembro de 2026",
+  site: BASE + "letis-studio-de-beleza/",
+  videos: [["compilacao-lenta", "Compilação dos trabalhos"], ["como-chegar-3d", "Como chegar (mapa 3D real)"]],
+  feito: [
+    "Ficha no Google Maps criada (e 400€ de publicidade grátis da Google)",
+    "Site com galeria, \"Como chegar\" e WhatsApp, no domínio dela, sem custos",
+    "WhatsApp Business com assistente automático, catálogo, horários e respostas",
+    "3 Reels por semana no Instagram, Facebook e TikTok, agendados",
+    "Animação 3D \"Como chegar\" com o mapa real do Barreiro",
+    "Cartão de fidelização impresso + app no telemóvel para os carimbos",
+    "Anúncios só para o Barreiro (5€/dia) e divulgação em grupos do Facebook"
+  ]
+};
+function casoLeti(){
+  return card(eyebrow("Caso real · já trabalho com"),
+    el("h2",{textContent:CASO.nome}), el("p",{className:"mute",textContent:CASO.onde}),
+    el("div",{className:"reels"}, ...CASO.videos.map(([f,t]) => el("div",{className:"reel"},
+      el("video",{src:`../letis-studio-de-beleza/caso/${f}.mp4`,poster:`../letis-studio-de-beleza/caso/${f}.jpg`,controls:true,preload:"none",playsInline:true}),
+      el("b",{textContent:t})))),
+    el("ul",{}, ...CASO.feito.map(x => el("li",{textContent:x}))),
+    el("div",{className:"btns"}, el("a",{className:"btn",href:CASO.site,target:"_blank",rel:"noopener",textContent:"Ver o site dela"})));
 }
 
 // ---------------------------------------------------------------- CONTAS
