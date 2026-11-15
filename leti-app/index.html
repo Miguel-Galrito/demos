@@ -117,7 +117,7 @@ let config = Object.assign({ meta: 10, oferta: "Oferta especial" }, ler("leti-co
 let estado = { aba: "clientes", filtro: "todas", procura: "" };
 
 // código pode vir no link do atalho: .../leti-app/#LETI-XXXX
-if (location.hash.length > 3) { codigo = decodeURIComponent(location.hash.slice(1)).toUpperCase(); gravar("leti-codigo", codigo); history.replaceState(null, "", location.pathname); }
+if (location.hash.length > 3) { codigo = decodeURIComponent(location.hash.slice(1)).toUpperCase(); gravar("leti-codigo", codigo); } // o #código fica no link, para o ícone do ecrã principal entrar sempre direto
 
 async function rpc(fn, args) {
   const r = await fetch(`${URL_SB}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: CHAVE, "Content-Type": "application/json" }, body: JSON.stringify(args) });

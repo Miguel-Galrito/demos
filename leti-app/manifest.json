@@ -2,7 +2,6 @@
   "name": "Leti's Studio",
   "short_name": "Leti's Studio",
   "description": "Cartão de fidelização e ajuda do Leti's Studio de Beleza",
-  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
