@@ -3,11 +3,14 @@
  "nome": "Mendes Projetos - Construção e Remodelação",
  "nicho": "remodelacoes",
  "servicos": [
-  "Remodelação de cozinhas",
-  "Remodelação de casas de banho",
-  "Remodelação de casas e apartamentos"
+  "Remodelação",
+  "Construção",
+  "Canalização",
+  "Eletricidade",
+  "Pintura",
+  "Impermeabilização"
  ],
- "zona": "Margem Sul e Lisboa",
+ "zona": "Lisboa e arredores",
  "morada": "Rua da Senhora da Glória 107, 1170-357 Lisboa",
  "horario": {
   "0": null,

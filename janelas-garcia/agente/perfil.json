@@ -3,32 +3,31 @@
  "nome": "Janelas Garcia",
  "nicho": "caixilharia",
  "servicos": [
-  "Janelas e portas em alumínio/PVC",
-  "Marquises",
-  "Estores"
+  "Janelas",
+  "Portas"
  ],
  "zona": "Margem Sul e Lisboa",
  "morada": "Av. Fialho Gouveia, 2870-152 Montijo",
  "horario": {
   "0": null,
   "1": [
-   "09:00",
+   "08:30",
    "18:00"
   ],
   "2": [
-   "09:00",
+   "08:30",
    "18:00"
   ],
   "3": [
-   "09:00",
+   "08:30",
    "18:00"
   ],
   "4": [
-   "09:00",
+   "08:30",
    "18:00"
   ],
   "5": [
-   "09:00",
+   "08:30",
    "18:00"
   ],
   "6": [

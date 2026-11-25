@@ -1392,7 +1392,7 @@
       const bloco = criar("details", { className: "sec" },
         criar("summary", { className: "titulo-sec", textContent: `Sprint ticket alto · ${sprint.length} por contactar` }),
         criar("p", { className: "nota", textContent: "Objetivo: 30 contactos em 3 dias, 3 reuniões de 15 min, 1 sim. À porta: demo do agente no telemóvel em 30 s, tirar o WhatsApp do dono e marcar a conversa sentada. Nunca fechar ao balcão. Porta-a-porta ter–qui, 10h–11h30 ou 14h30–16h30." }),
-        ...[...grupos.entries()].map(([titulo, lista]) => criar("div", { className: "sec" },
+        ...[...grupos.entries()].sort(([a], [b]) => (a.startsWith("📞") ? -1 : b.startsWith("📞") ? 1 : a.localeCompare(b, "pt-PT"))).map(([titulo, lista]) => criar("div", { className: "sec" },
           criar("div", { className: "titulo-sec", textContent: `${titulo} (${lista.length})` }),
           lista[0].canal !== "ligar" && COMO_IR[lista[0].grupo] ? criar("p", { className: "nota", textContent: COMO_IR[lista[0].grupo] }) : null,
           criar("div", { className: "lista" }, ...lista.map((lead) => linhaLead(lead, null, `${lead.categoria} · ${lead.telefone || ""}`)))
