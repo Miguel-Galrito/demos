@@ -1,0 +1,52 @@
+{
+ "slug": "cozinhas-joao-reis",
+ "nome": "Cozinhas João Reis",
+ "nicho": "cozinhas",
+ "servicos": [
+  "Cozinhas por medida",
+  "Remodelação de cozinhas"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Rua Rogério Paulo 18 B, 2835-154 Baixa da Banheira",
+ "horario": {
+  "0": null,
+  "1": [
+   "09:00",
+   "19:00"
+  ],
+  "2": [
+   "09:00",
+   "19:00"
+  ],
+  "3": [
+   "09:00",
+   "19:00"
+  ],
+  "4": [
+   "09:00",
+   "19:00"
+  ],
+  "5": [
+   "09:00",
+   "19:00"
+  ],
+  "6": [
+   "10:00",
+   "13:00"
+  ]
+ },
+ "duracaoMin": 60,
+ "logo": "",
+ "sugestoes": [
+  "Queria uma cozinha nova",
+  "Quanto custa uma cozinha?",
+  "Têm showroom?"
+ ],
+ "reserva": [
+  "Que tipo de obra tem em mente: cozinha, casa de banho ou a casa toda?",
+  "Em que zona fica a obra?",
+  "E para quando gostaria de começar?",
+  "Perfeito. Podemos fazer uma visita gratuita para medir e fazer o orçamento. Pode amanhã às 10h00 ou prefere outro dia?"
+ ],
+ "tituloReserva": "Visita para medir a cozinha"
+}

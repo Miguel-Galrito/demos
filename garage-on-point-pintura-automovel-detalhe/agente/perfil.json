@@ -1,0 +1,53 @@
+{
+ "slug": "garage-on-point-pintura-automovel-detalhe",
+ "nome": "Garage On Point - Pintura Automóvel & Detalhe",
+ "nicho": "detailing",
+ "servicos": [
+  "Limpeza interior e exterior",
+  "Polimento",
+  "Proteção cerâmica"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Rua Mário de Sá Carneiro, Almada",
+ "horario": {
+  "0": null,
+  "1": [
+   "09:45",
+   "18:30"
+  ],
+  "2": [
+   "09:45",
+   "18:30"
+  ],
+  "3": [
+   "09:45",
+   "18:30"
+  ],
+  "4": [
+   "09:45",
+   "18:30"
+  ],
+  "5": [
+   "09:45",
+   "18:30"
+  ],
+  "6": [
+   "09:45",
+   "13:00"
+  ]
+ },
+ "duracaoMin": 30,
+ "logo": "",
+ "sugestoes": [
+  "Queria polir o carro",
+  "Quanto custa um cerâmico?",
+  "Fazem PPF?"
+ ],
+ "reserva": [
+  "Que carro é (marca e modelo)?",
+  "Que serviço procura: limpeza, polimento, proteção cerâmica?",
+  "Para quando gostaria?",
+  "Perfeito. Pode trazer o carro amanhã às 10h00 para avaliarmos?"
+ ],
+ "tituloReserva": "Avaliação do carro"
+}

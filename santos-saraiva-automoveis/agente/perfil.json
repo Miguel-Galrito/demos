@@ -1,0 +1,49 @@
+{
+ "slug": "santos-saraiva-automoveis",
+ "nome": "Santos & Saraiva Automóveis",
+ "nicho": "stand",
+ "servicos": [
+  "Venda de automóveis usados",
+  "Retomas"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Estrada dos Arneiros 20A, 1500-050 Lisboa",
+ "horario": {
+  "0": null,
+  "1": [
+   "09:00",
+   "20:00"
+  ],
+  "2": [
+   "09:00",
+   "20:00"
+  ],
+  "3": [
+   "09:00",
+   "20:00"
+  ],
+  "4": [
+   "09:00",
+   "20:00"
+  ],
+  "5": [
+   "09:00",
+   "20:00"
+  ],
+  "6": null
+ },
+ "duracaoMin": 45,
+ "logo": "",
+ "sugestoes": [
+  "Ainda têm o carro do anúncio?",
+  "Aceitam retoma?",
+  "Quanto custa?"
+ ],
+ "reserva": [
+  "Que carro procura?",
+  "Tem carro para retoma?",
+  "Quando gostaria de vir ver?",
+  "Perfeito. Pode amanhã às 10h00 no stand?"
+ ],
+ "tituloReserva": "Visita ao stand"
+}

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut, interactive-widget=resizes-content">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#008069">
+<title>Cozinhas João Reis · Assistente WhatsApp</title>
+<style>
+  :root {
+    --verde: #008069; --verde-escuro: #005c4b; --fundo: #efeae2; --enviada: #d9fdd3; --recebida: #ffffff;
+    --tinta: #111b21; --suave: #667781; --linha: #e9edef; --azul: #53bdeb; --aviso: #fff5c4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { font: 15px/1.4 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--tinta); background: #d1d7db; }
+  .app { max-width: 520px; height: 100dvh; margin: 0 auto; display: flex; flex-direction: column; background: var(--fundo); position: relative; }
+  header { display: flex; align-items: center; gap: 10px; padding: 8px 12px; padding-top: max(8px, env(safe-area-inset-top)); background: var(--verde); color: #fff; }
+  .voltar { font-size: 22px; opacity: .9; width: 22px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; background: #dfe5e7 center/cover; display: grid; place-items: center; color: var(--verde-escuro); font-weight: 700; flex: none; }
+  .quem { flex: 1; min-width: 0; }
+  .quem b { display: block; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .quem span { font-size: 12.5px; opacity: .85; }
+  .icones { display: flex; gap: 18px; font-size: 18px; opacity: .9; }
+  .icones button { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; padding: 4px; }
+  #conversa { flex: 1; overflow-y: auto; padding: 10px 12px 6px; background-color: var(--fundo);
+    background-image: radial-gradient(rgba(0,0,0,.035) 1px, transparent 1px); background-size: 18px 18px; }
+  .dia { text-align: center; margin: 6px 0 10px; }
+  .dia span, .aviso { display: inline-block; font-size: 12.5px; padding: 5px 10px; border-radius: 8px; background: #fff; color: var(--suave); box-shadow: 0 1px .5px rgba(11,20,26,.13); }
+  .aviso { display: block; background: var(--aviso); color: #54656f; text-align: center; margin: 0 auto 10px; max-width: 92%; line-height: 1.35; }
+  .msg { max-width: 82%; margin: 2px 0; padding: 6px 8px 8px 9px; border-radius: 8px; box-shadow: 0 1px .5px rgba(11,20,26,.13); position: relative; white-space: pre-wrap; word-wrap: break-word; }
+  .msg .hora { float: right; font-size: 11px; color: var(--suave); margin: 8px 0 -4px 10px; }
+  .msg.eu { margin-left: auto; background: var(--enviada); border-top-right-radius: 0; }
+  .msg.eu .hora::after { content: " ✓✓"; color: var(--azul); }
+  .msg.ele { background: var(--recebida); border-top-left-radius: 0; }
+  .msg + .msg.eu, .msg + .msg.ele { margin-top: 2px; }
+  .msg.eu + .msg.ele, .msg.ele + .msg.eu { margin-top: 10px; }
+  .escrever { display: inline-flex; gap: 4px; padding: 12px 14px; }
+  .escrever i { width: 7px; height: 7px; border-radius: 50%; background: #9aa5ab; animation: pulo 1.2s infinite; }
+  .escrever i:nth-child(2) { animation-delay: .15s; } .escrever i:nth-child(3) { animation-delay: .3s; }
+  @keyframes pulo { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+  .evento { margin: 10px 0 10px auto; max-width: 88%; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(11,20,26,.18); }
+  .evento .topo { display: flex; align-items: center; gap: 8px; padding: 10px 12px; font-size: 12.5px; color: #3c4043; border-bottom: 1px solid #eceff1; }
+  .evento .gc { width: 22px; height: 22px; border-radius: 4px; background: #fff; border: 2px solid #1a73e8; display: grid; place-items: center; font-size: 10px; font-weight: 800; color: #1a73e8; }
+  .evento .corpo { display: flex; gap: 12px; padding: 12px; }
+  .evento .barra { width: 4px; border-radius: 2px; background: #039be5; flex: none; }
+  .evento h3 { margin: 0 0 4px; font-size: 16px; font-weight: 600; color: #202124; }
+  .evento p { margin: 2px 0; font-size: 13.5px; color: #3c4043; }
+  .evento .nota { color: #5f6368; font-size: 12.5px; margin-top: 6px; }
+  .dono { margin: 10px auto; max-width: 92%; text-align: center; font-size: 12.5px; padding: 6px 10px; border-radius: 8px; background: #e7f3ff; color: #1d4f7a; }
+  #sugestoes { display: flex; gap: 6px; overflow-x: auto; padding: 6px 10px 0; scrollbar-width: none; }
+  #sugestoes[hidden] { display: none; }
+  #sugestoes button { flex: none; border: 1px solid #c9d3d8; background: #fff; color: var(--verde-escuro); border-radius: 18px; padding: 7px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+  form { display: flex; align-items: flex-end; gap: 6px; padding: 6px 8px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  textarea { flex: 1; resize: none; border: 0; border-radius: 22px; padding: 11px 16px; font: inherit; font-size: 16px; max-height: 120px; outline: none; background: #fff; box-shadow: 0 1px .5px rgba(11,20,26,.13); }
+  form button { width: 46px; height: 46px; border-radius: 50%; border: 0; background: var(--verde); color: #fff; font-size: 20px; cursor: pointer; flex: none; }
+  form button:disabled { opacity: .55; }
+  .rodape { text-align: center; font-size: 11.5px; color: #54656f; padding: 0 12px 6px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <span class="voltar" aria-hidden="true">‹</span>
+    <div class="avatar" id="avatar" aria-hidden="true"></div>
+    <div class="quem"><b id="nome"></b><span id="estado">Conta comercial</span></div>
+    <div class="icones">
+      <button type="button" id="recomecar" title="Recomeçar a conversa" aria-label="Recomeçar a conversa">↺</button>
+    </div>
+  </header>
+  <main id="conversa" aria-live="polite">
+    <div class="dia"><span>Hoje</span></div>
+    <p class="aviso">Demonstração (projeto-modelo). Escreva como se fosse um cliente: o assistente responde, faz as perguntas certas e marca a visita na agenda.</p>
+  </main>
+  <div id="sugestoes"></div>
+  <form id="formulario" autocomplete="off">
+    <textarea id="texto" rows="1" placeholder="Mensagem" aria-label="Mensagem" maxlength="600"></textarea>
+    <button id="enviar" aria-label="Enviar">➤</button>
+  </form>
+  <p class="rodape">Assistente automático · nunca dá preços · passa ao responsável quando não sabe</p>
+</div>
+<script>
+const PERFIL = {"slug": "cozinhas-joao-reis", "nome": "Cozinhas João Reis", "nicho": "cozinhas", "servicos": ["Cozinhas por medida", "Remodelação de cozinhas"], "zona": "Margem Sul e Lisboa", "morada": "Rua Rogério Paulo 18 B, 2835-154 Baixa da Banheira", "horario": {"0": null, "1": ["09:00", "19:00"], "2": ["09:00", "19:00"], "3": ["09:00", "19:00"], "4": ["09:00", "19:00"], "5": ["09:00", "19:00"], "6": ["10:00", "13:00"]}, "duracaoMin": 60, "logo": "", "sugestoes": ["Queria uma cozinha nova", "Quanto custa uma cozinha?", "Têm showroom?"], "reserva": ["Que tipo de obra tem em mente: cozinha, casa de banho ou a casa toda?", "Em que zona fica a obra?", "E para quando gostaria de começar?", "Perfeito. Podemos fazer uma visita gratuita para medir e fazer o orçamento. Pode amanhã às 10h00 ou prefere outro dia?"], "tituloReserva": "Visita para medir a cozinha"};
+const ENDPOINT = "https://gickhwsqogobhfldcnln.supabase.co/functions/v1/agente";
+const CHAVE = "sb_publishable_k3fU8YCUPf6xWg80i1sKUA_3JX2r-in"; // pública por natureza
+const $ = (id) => document.getElementById(id);
+const conversaEl = $("conversa");
+const mensagens = [];
+let ocupado = false;
+let marcado = false;
+
+function novoId() {
+  try { return crypto.randomUUID(); } catch { return "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+}
+let conversaId = novoId();
+
+$("nome").textContent = PERFIL.nome;
+document.title = `${PERFIL.nome} · WhatsApp`;
+if (PERFIL.logo) $("avatar").style.backgroundImage = `url("${PERFIL.logo}")`;
+else $("avatar").textContent = PERFIL.nome.split(/\s+/).filter((p) => /^[A-ZÀ-Ü0-9]/.test(p)).slice(0, 2).map((p) => p[0]).join("") || "•";
+
+function hora() { return new Date().toLocaleTimeString("pt-PT", { hour: "2-digit", minute: "2-digit" }); }
+function rolar() { conversaEl.scrollTop = conversaEl.scrollHeight; }
+function bolha(texto, quem) {
+  const el = document.createElement("div");
+  el.className = `msg ${quem}`;
+  el.textContent = texto;
+  const h = document.createElement("span");
+  h.className = "hora";
+  h.textContent = hora();
+  el.append(h);
+  conversaEl.append(el);
+  rolar();
+}
+function aEscrever(ligado) {
+  $("estado").textContent = ligado ? "a escrever…" : "Conta comercial";
+  let el = $("a-escrever");
+  if (ligado && !el) {
+    el = document.createElement("div");
+    el.id = "a-escrever";
+    el.className = "msg ele escrever";
+    el.innerHTML = "<i></i><i></i><i></i>";
+    conversaEl.append(el);
+    rolar();
+  } else if (!ligado && el) el.remove();
+}
+
+const DIAS = ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"];
+const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+function cartaoEvento(m) {
+  const [a, me, d] = m.data.split("-").map(Number);
+  const dia = new Date(Date.UTC(a, me - 1, d, 12));
+  const [hh, mm] = m.hora.split(":").map(Number);
+  const fimMin = hh * 60 + mm + (PERFIL.duracaoMin || 60);
+  const fim = `${String(Math.floor(fimMin / 60)).padStart(2, "0")}:${String(fimMin % 60).padStart(2, "0")}`;
+  const el = document.createElement("div");
+  el.className = "evento";
+  el.innerHTML = `<div class="topo"><span class="gc">${d}</span><span>Google Calendar · Agenda de <b></b></span></div>
+    <div class="corpo"><span class="barra"></span><div><h3></h3><p class="quando"></p><p class="onde"></p><p class="nota"></p></div></div>`;
+  el.querySelector(".topo b").textContent = PERFIL.nome;
+  el.querySelector("h3").textContent = m.titulo;
+  el.querySelector(".quando").textContent = `${DIAS[dia.getUTCDay()]}, ${d} de ${MESES[me - 1]} · ${m.hora} – ${fim}`;
+  el.querySelector(".onde").textContent = `📍 ${m.local}`;
+  el.querySelector(".nota").textContent = `${m.resumo}\nContacto: ${m.nome} · WhatsApp · lembrete automático 24 h antes`;
+  conversaEl.append(el);
+  rolar();
+}
+function avisoDono() {
+  const el = document.createElement("div");
+  el.className = "dono";
+  el.textContent = `🔔 Notificação enviada ao responsável de ${PERFIL.nome} com o resumo da conversa.`;
+  conversaEl.append(el);
+  rolar();
+}
+
+function vagaReserva() {
+  const d = new Date();
+  for (let i = 1; i <= 10; i++) {
+    const dia = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
+    const h = PERFIL.horario[String(dia.getDay())];
+    if (!h || h[0] > "10:00") continue;
+    const data = `${dia.getFullYear()}-${String(dia.getMonth() + 1).padStart(2, "0")}-${String(dia.getDate()).padStart(2, "0")}`;
+    return { data, hora: "10:00", texto: `${DIAS[dia.getDay()]}, ${dia.getDate()} de ${MESES[dia.getMonth()]}, às 10h00` };
+  }
+  return { data: "", hora: "10:00", texto: "o próximo dia útil às 10h00" };
+}
+
+// Plano B (sem rede ou serviço em baixo): segue o mesmo filtro, sem inteligência. Nunca dá preços.
+const reserva = {
+  passo: 0,
+  responder(texto) {
+    const t = texto.toLowerCase();
+    if (/(pre[cç]o|quanto (custa|fica|é)|valor|or[cç]amento\s*\?)/.test(t)) return { mensagem: "Os valores dependem de cada caso; o orçamento é feito sem compromisso depois de vermos o pedido. " + (PERFIL.reserva[this.passo] || ""), marcacao: null };
+    if (this.passo === 0 && /(cozinha|casa de banho|wc|apartamento|casa toda|janela|marquise|polir|polimento|cer[aâ]mic|ppf|limpeza)/.test(t)) this.passo = 1;
+    const r = PERFIL.reserva[this.passo];
+    this.passo = Math.min(this.passo + 1, PERFIL.reserva.length);
+    if (r) return { mensagem: (mensagens.length <= 1 ? "Olá! Obrigado pelo contacto. " : "") + r, marcacao: null };
+    if (!marcado) {
+      const v = vagaReserva();
+      return { mensagem: `Fica marcado para ${v.texto}. O contacto fica associado a este número de WhatsApp. Até lá!`, marcacao: { data: v.data, hora: v.hora, titulo: PERFIL.tituloReserva, nome: "Cliente", local: PERFIL.morada, resumo: "Marcação feita pelo assistente" } };
+    }
+    if (/(obrigad|ok|até|combinado|perfeito)/.test(t)) return { mensagem: "Nós é que agradecemos. Até breve!", marcacao: null };
+    return { mensagem: "Vou passar a sua mensagem ao responsável, que lhe responde em breve.", marcacao: null, passarAoDono: true };
+  }
+};
+
+async function perguntar() {
+  const pedido = fetch(ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: CHAVE },
+    body: JSON.stringify({ lead: PERFIL.slug, conversa: conversaId, mensagens })
+  });
+  const tempo = new Promise((_, falha) => setTimeout(() => falha(new Error("tempo")), 20000));
+  const resposta = await Promise.race([pedido, tempo]);
+  const corpo = await resposta.json().catch(() => ({}));
+  if (!resposta.ok && !corpo.mensagem) throw new Error(corpo.erro || String(resposta.status));
+  return corpo;
+}
+
+async function enviar(texto) {
+  texto = texto.trim();
+  if (!texto || ocupado) return;
+  ocupado = true;
+  $("enviar").disabled = true;
+  $("sugestoes").hidden = true;
+  bolha(texto, "eu");
+  mensagens.push({ role: "user", content: texto.slice(0, 600) });
+  await new Promise((r) => setTimeout(r, 350));
+  aEscrever(true);
+  let saida;
+  try {
+    saida = await perguntar();
+  } catch {
+    saida = reserva.responder(texto);
+  }
+  aEscrever(false);
+  const resposta = (saida.mensagem || "").trim() || "Vou passar a sua mensagem ao responsável, que lhe responde em breve.";
+  bolha(resposta, "ele");
+  mensagens.push({ role: "assistant", content: resposta });
+  if (saida.marcacao && !marcado) { marcado = true; setTimeout(() => cartaoEvento(saida.marcacao), 500); }
+  if (saida.passarAoDono) setTimeout(avisoDono, 400);
+  if (mensagens.length >= 38) { mensagens.splice(0, 2); }
+  ocupado = false;
+  $("enviar").disabled = false;
+  $("texto").focus();
+}
+
+PERFIL.sugestoes.forEach((s) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.textContent = s;
+  b.onclick = () => enviar(s);
+  $("sugestoes").append(b);
+});
+{
+  const m = location.hash.match(/^#m=(.+)$/);
+  if (m) { try { const t = decodeURIComponent(m[1]).slice(0, 600); history.replaceState(null, "", location.pathname); setTimeout(() => enviar(t), 400); } catch { /* ignora */ } }
+}
+$("formulario").addEventListener("submit", (e) => { e.preventDefault(); const t = $("texto").value; $("texto").value = ""; ajustar(); enviar(t); });
+$("texto").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("formulario").requestSubmit(); } });
+function ajustar() { const t = $("texto"); t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 120) + "px"; }
+$("texto").addEventListener("input", ajustar);
+$("recomecar").addEventListener("click", () => {
+  location.reload();
+});
+</script>
+</body>
+</html>

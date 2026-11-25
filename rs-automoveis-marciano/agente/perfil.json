@@ -1,0 +1,52 @@
+{
+ "slug": "rs-automoveis-marciano",
+ "nome": "RS Automóveis Marciano",
+ "nicho": "stand",
+ "servicos": [
+  "Venda de automóveis usados",
+  "Retomas"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Av. Estado da Índia 12 C, 2685-048 Sacavém",
+ "horario": {
+  "0": null,
+  "1": [
+   "09:00",
+   "19:00"
+  ],
+  "2": [
+   "09:00",
+   "19:00"
+  ],
+  "3": [
+   "09:00",
+   "19:00"
+  ],
+  "4": [
+   "09:00",
+   "19:00"
+  ],
+  "5": [
+   "09:00",
+   "19:00"
+  ],
+  "6": [
+   "09:00",
+   "18:00"
+  ]
+ },
+ "duracaoMin": 45,
+ "logo": "",
+ "sugestoes": [
+  "Ainda têm o carro do anúncio?",
+  "Aceitam retoma?",
+  "Quanto custa?"
+ ],
+ "reserva": [
+  "Que carro procura?",
+  "Tem carro para retoma?",
+  "Quando gostaria de vir ver?",
+  "Perfeito. Pode amanhã às 10h00 no stand?"
+ ],
+ "tituloReserva": "Visita ao stand"
+}

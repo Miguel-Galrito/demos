@@ -1,0 +1,52 @@
+{
+ "slug": "dias-automoveis",
+ "nome": "Dias Automóveis",
+ "nicho": "stand",
+ "servicos": [
+  "Venda de automóveis usados",
+  "Retomas"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Rua Salvador Allende 7 A/B, 2685-114 Sacavém",
+ "horario": {
+  "0": null,
+  "1": [
+   "10:00",
+   "19:00"
+  ],
+  "2": [
+   "10:00",
+   "19:00"
+  ],
+  "3": [
+   "10:00",
+   "19:00"
+  ],
+  "4": [
+   "10:00",
+   "19:00"
+  ],
+  "5": [
+   "10:00",
+   "19:00"
+  ],
+  "6": [
+   "10:00",
+   "17:30"
+  ]
+ },
+ "duracaoMin": 45,
+ "logo": "",
+ "sugestoes": [
+  "Ainda têm o carro do anúncio?",
+  "Aceitam retoma?",
+  "Quanto custa?"
+ ],
+ "reserva": [
+  "Que carro procura?",
+  "Tem carro para retoma?",
+  "Quando gostaria de vir ver?",
+  "Perfeito. Pode amanhã às 10h00 no stand?"
+ ],
+ "tituloReserva": "Visita ao stand"
+}

@@ -1,0 +1,50 @@
+{
+ "slug": "home-concept-remodelacoes-e-construcao-civil",
+ "nome": "Home Concept Remodelações e Construção Civil",
+ "nicho": "remodelacoes",
+ "servicos": [
+  "Remodelação de cozinhas",
+  "Remodelação de casas de banho",
+  "Remodelação de casas e apartamentos"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Rua Conde de Sandomil 1A, Gab. 17, 2805-244 Almada",
+ "horario": {
+  "0": null,
+  "1": [
+   "08:00",
+   "18:00"
+  ],
+  "2": [
+   "08:00",
+   "18:00"
+  ],
+  "3": [
+   "08:00",
+   "18:00"
+  ],
+  "4": [
+   "08:00",
+   "18:00"
+  ],
+  "5": [
+   "08:00",
+   "18:00"
+  ],
+  "6": null
+ },
+ "duracaoMin": 60,
+ "logo": "",
+ "sugestoes": [
+  "Queria remodelar a cozinha",
+  "Quanto custa uma casa de banho?",
+  "Fazem obras em Almada?"
+ ],
+ "reserva": [
+  "Que tipo de obra tem em mente: cozinha, casa de banho ou a casa toda?",
+  "Em que zona fica a obra?",
+  "E para quando gostaria de começar?",
+  "Perfeito. Podemos fazer uma visita gratuita para medir e fazer o orçamento. Pode amanhã às 10h00 ou prefere outro dia?"
+ ],
+ "tituloReserva": "Visita técnica · orçamento"
+}

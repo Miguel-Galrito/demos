@@ -1,0 +1,53 @@
+{
+ "slug": "janelar-janelas-portas-e-estores",
+ "nome": "Janelar - Janelas, Portas e Estores",
+ "nicho": "caixilharia",
+ "servicos": [
+  "Janelas e portas em alumínio/PVC",
+  "Marquises",
+  "Estores"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Av. 23 de Julho de 1833 (EN 378, km 7), 2865-413 Fernão Ferro",
+ "horario": {
+  "0": null,
+  "1": [
+   "08:30",
+   "17:30"
+  ],
+  "2": [
+   "08:30",
+   "17:30"
+  ],
+  "3": [
+   "08:30",
+   "17:30"
+  ],
+  "4": [
+   "08:30",
+   "17:30"
+  ],
+  "5": [
+   "08:30",
+   "17:30"
+  ],
+  "6": [
+   "09:00",
+   "12:30"
+  ]
+ },
+ "duracaoMin": 45,
+ "logo": "",
+ "sugestoes": [
+  "Queria trocar as janelas",
+  "Quanto custa uma marquise?",
+  "Fazem estores elétricos?"
+ ],
+ "reserva": [
+  "Que tipo de obra tem em mente: cozinha, casa de banho ou a casa toda?",
+  "Em que zona fica a obra?",
+  "E para quando gostaria de começar?",
+  "Perfeito. Podemos fazer uma visita gratuita para medir e fazer o orçamento. Pode amanhã às 10h00 ou prefere outro dia?"
+ ],
+ "tituloReserva": "Visita para medições"
+}
