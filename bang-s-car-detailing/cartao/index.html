@@ -1,0 +1,40 @@
+<!doctype html><html lang="pt-PT"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Cartão de cliente · Bang's</title><style>
+:root{--acc:#3d8bfd;--bg:#f6f5f2;--card:#fff;--ink:#16181b;--muted:#5d6166;--line:#e2e0da}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1114;--card:#181b20;--ink:#eef1f4;--muted:#9aa3ad;--line:#2a2f36}}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 -apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+main{max-width:460px;margin:0 auto;padding:20px 16px 40px}
+.aviso{font-size:13px;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:8px 12px;margin-bottom:16px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);font-weight:700;margin:0}
+h1{font-size:26px;line-height:1.2;margin:6px 0 4px}p{margin:6px 0}.mute{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:16px}
+.grelha{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+.selo{aspect-ratio:1;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;font-weight:700;color:var(--muted)}
+.selo.on{background:var(--acc);border-color:var(--acc);color:#fff}.selo.oferta{border-style:solid;border-color:var(--acc);color:var(--acc);font-size:12px}
+button,.btn{display:block;width:100%;min-height:48px;border:0;border-radius:12px;background:var(--acc);color:#fff;font:inherit;font-weight:700;cursor:pointer;margin-top:10px}
+button.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+label{display:block;font-size:14px;margin-top:12px;color:var(--muted)}input{width:100%;min-height:46px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;background:var(--bg);color:var(--ink)}
+.ok{display:none;margin-top:12px;padding:12px;border-radius:10px;background:color-mix(in srgb,var(--acc) 14%,var(--card))}
+ol{padding-left:20px}li{margin:6px 0}
+</style></head><body><main>
+<p class="aviso">Proposta · demonstração feita para Bang&#x27;s. Os dados ficam só neste telemóvel.</p>
+<p class="eyebrow">Cartão de cliente</p><h1>Bang&#x27;s</h1>
+<p class="mute">A cada lavagem, a equipa marca um carimbo. A 10.ª é oferta.</p>
+<div class="card"><div class="grelha" id="g"></div><p id="estado" class="mute"></p>
+<button id="mais">Marcar uma lavagem (equipa)</button><button class="sec" id="zero">Recomeçar a demonstração</button></div>
+<div class="card"><b>Como funciona no dia a dia</b><ol>
+<li>O cliente guarda este cartão no telemóvel (link pelo WhatsApp).</li>
+<li>No fim de cada lavagem, a equipa carimba com o código da loja.</li>
+<li>Na 10.ª, o sistema avisa e a lavagem é oferta.</li>
+<li>Se o cliente não volta há 6 semanas, recebe um lembrete pelo WhatsApp (só com o consentimento dele).</li></ol>
+<p class="mute">Que lavagem conta e qual é a oferta: define com a Bang&#x27;s.</p></div>
+</main><script>
+const guardar=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};const ler=k=>{try{return localStorage.getItem(k)}catch{return null}};
+const K="cartao-bang-s-car-detailing";let n=+(ler(K)||0);
+function desenhar(){const g=document.getElementById("g");g.innerHTML="";for(let i=1;i<=10;i++){const d=document.createElement("div");
+d.className="selo"+(i<=n?" on":"")+(i===10&&n<10?" oferta":"");d.textContent=i===10&&n<10?"Oferta":i;g.append(d)}
+document.getElementById("estado").textContent=n>=10?"Cartão completo: a próxima lavagem é oferta.":`Faltam ${10-n} para a oferta.`}
+document.getElementById("mais").onclick=()=>{n=Math.min(10,n+1);guardar(K,n);desenhar()};
+document.getElementById("zero").onclick=()=>{n=0;guardar(K,0);desenhar()};desenhar();
+</script></body></html>

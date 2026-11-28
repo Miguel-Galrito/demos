@@ -1,0 +1,53 @@
+{
+ "slug": "vr-auto-estetica-automotiva",
+ "nome": "VR Auto Estética Automotiva",
+ "nicho": "detailing",
+ "servicos": [
+  "Limpeza interior e exterior",
+  "Polimento",
+  "Proteção cerâmica"
+ ],
+ "zona": "Margem Sul e Lisboa",
+ "morada": "Largo da República, Odivelas",
+ "horario": {
+  "0": null,
+  "1": [
+   "09:00",
+   "18:00"
+  ],
+  "2": [
+   "09:00",
+   "18:00"
+  ],
+  "3": [
+   "09:00",
+   "18:00"
+  ],
+  "4": [
+   "09:00",
+   "18:00"
+  ],
+  "5": [
+   "09:00",
+   "18:00"
+  ],
+  "6": [
+   "09:00",
+   "13:00"
+  ]
+ },
+ "duracaoMin": 30,
+ "logo": "",
+ "sugestoes": [
+  "Queria polir o carro",
+  "Quanto custa um cerâmico?",
+  "Fazem PPF?"
+ ],
+ "reserva": [
+  "Que carro é (marca e modelo)?",
+  "Que serviço procura: limpeza, polimento, proteção cerâmica?",
+  "Para quando gostaria?",
+  "Perfeito. Pode trazer o carro amanhã às 10h00 para avaliarmos?"
+ ],
+ "tituloReserva": "Avaliação do carro"
+}
