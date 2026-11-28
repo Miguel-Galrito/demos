@@ -561,6 +561,10 @@
   const PRECO_NORMAL = 199;
   const TELEFONE_NEGOCIO = "928 031 299";
   const MENSALIDADE = 15;
+  // Ticket alto (remodelações, cozinhas, caixilharia, detailing, stands): os 2 planos da proposta, mais IVA.
+  const TA_PLANOS = { base: { nome: "Resposta Automática", setup: 600, mes: 500 }, completo: { nome: "Sistema Completo", setup: 850, mes: 950 } };
+  const ehTA = (lead) => !!lead && lead.segmento === "ticket-alto";
+  const mensalDe = (lead) => ehTA(lead) ? (lead.valor === TA_PLANOS.completo.setup ? TA_PLANOS.completo.mes : TA_PLANOS.base.mes) : MENSALIDADE;
   const PERFIS = {
     miguel: {
       id: "miguel", nome: "Miguel", colecao: "leads", turno: "turno/atual", plano: "turno-plano", base: "base-mapa",
@@ -694,7 +698,7 @@
   const todos = () => [...leads.values()].sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
   const fechados = () => todos().filter((lead) => lead.estado === "fechado");
   const arquivo = { leads: [], "leads-maribel": [] };
-  const fechosGlobais = (excepto) => Object.values(arquivo).flat().filter((lead) => lead.estado === "fechado" && lead.id !== excepto).length;
+  const fechosGlobais = (excepto) => Object.values(arquivo).flat().filter((lead) => lead.estado === "fechado" && !ehTA(lead) && lead.id !== excepto).length;
   const lugaresLivres = () => Math.max(LUGARES_OFERTA - fechosGlobais(), 0);
   const seguimentoEm = (lead) => (lead.seguimento ? new Date(lead.seguimento) : null);
 
@@ -994,7 +998,7 @@
       historico: [...antes.historico, { em: agora.toISOString(), estado: valor }]
     };
     if (valor === "fechado") {
-      campos.valor = fechosGlobais(lead.id) < LUGARES_OFERTA ? PRECO_OFERTA : PRECO_NORMAL;
+      campos.valor = ehTA(lead) ? TA_PLANOS.base.setup : fechosGlobais(lead.id) < LUGARES_OFERTA ? PRECO_OFERTA : PRECO_NORMAL;
     }
     escrever(lead.id, campos);
     const texto = ESTADOS.find((item) => item.valor === valor).texto;
@@ -1209,9 +1213,10 @@
     };
     return criar("div", { className: "tratar" },
       criar("div", { className: "titulo-sec", textContent: "Depois do sim" }),
-      criar("div", { className: "botoes" }, preco(PRECO_OFERTA), preco(PRECO_NORMAL)),
-      caixa(lead, "pago", `Recebi os ${lead.valor || PRECO_NORMAL}€`),
-      caixa(lead, "online", "Site online"),
+      ehTA(lead) ? criar("p", { className: "nota", textContent: `Montagem: ${TA_PLANOS.base.setup}€ (${TA_PLANOS.base.nome}) ou ${TA_PLANOS.completo.setup}€ (${TA_PLANOS.completo.nome}), mais IVA.` }) : null,
+      criar("div", { className: "botoes" }, ...(ehTA(lead) ? [preco(TA_PLANOS.base.setup), preco(TA_PLANOS.completo.setup)] : [preco(PRECO_OFERTA), preco(PRECO_NORMAL)])),
+      caixa(lead, "pago", `Recebi os ${lead.valor || (ehTA(lead) ? TA_PLANOS.base.setup : PRECO_NORMAL)}€`),
+      caixa(lead, "online", ehTA(lead) ? "Tudo a funcionar" : "Site online"),
       caixa(lead, "faturado", "Fatura emitida")
     );
   }
@@ -1281,7 +1286,7 @@
     const total = lista.reduce((soma, lead) => soma + (lead.valor || 0), 0);
     $("c-recebido").textContent = `${recebido}€`;
     $("c-receber").textContent = `${total - recebido}€`;
-    $("c-mensal").textContent = `${lista.length * MENSALIDADE}€`;
+    $("c-mensal").textContent = `${lista.reduce((soma, lead) => soma + mensalDe(lead), 0)}€`;
     $("c-lugares").textContent = String(lugaresLivres());
   }
 
@@ -1639,6 +1644,7 @@
       (lugares > 0 ? ` Os 3 primeiros clientes pagam ${PRECO_OFERTA}€.` : "");
   }
   function textoMensagem(lead, tipo, lugares) {
+    if (ehTA(lead)) return textoMensagemTA(lead, tipo);
     const link = urlSegura(lead.demo) || "[link]";
     const fim = "Se quiser avançar, é só responder a esta mensagem.\n\nSe não quiser mais contacto, responda NÃO e não volto a contactar.";
     if (tipo === "sim") {
@@ -1657,6 +1663,7 @@
   }
 
   function guiaoLoja(lead, lugares, agora) {
+    if (ehTA(lead)) return guiaoLojaTA(lead, agora);
     const avaliacoes = fraseAvaliacoes(lead);
     const temSite = (lead.presenca || "").startsWith("site");
     return [
@@ -1673,6 +1680,7 @@
     ];
   }
   function guiaoChamada(lead, lugares, agora) {
+    if (ehTA(lead)) return guiaoChamadaTA(lead, agora);
     const avaliacoes = fraseAvaliacoes(lead);
     const temSite = (lead.presenca || "").startsWith("site");
     const fixo = soDigitos(lead) && !eTelemovel(lead);
@@ -1686,6 +1694,7 @@
     ];
   }
   function guiaoSeguimento(lead, lugares, agora) {
+    if (ehTA(lead)) return guiaoSeguimentoTA(lead, agora);
     const contacto = lead.contactadoEm ? new Date(lead.contactadoEm) : null;
     const quando = !contacto ? "há dias" : diaIso(contacto) === diaIso(agora) ? "há pouco" : naData(contacto);
     return [
@@ -1774,6 +1783,7 @@
     );
   }
   function objecoes(lead, lugares, modo, agora) {
+    if (ehTA(lead)) return objecoesTA(lead);
     const presenca = lead.presenca || "";
     const temSite = presenca.startsWith("site");
     const rede = presenca.includes("Instagram") ? "Instagram" : "Facebook";
@@ -1879,7 +1889,7 @@
     if (!lead) return;
     const lugares = lugaresLivres();
     const temProprio = Array.isArray(lead.guiaoProprio) && lead.guiaoProprio.length > 0;
-    const modoPadrao = temProprio ? "reuniao" : ["a-pensar", "mensagem", "voltar", "sem-resposta"].includes(lead.estado) ? "seguimento" : "loja";
+    const modoPadrao = temProprio ? "reuniao" : ["a-pensar", "mensagem", "voltar", "sem-resposta"].includes(lead.estado) ? "seguimento" : ehTA(lead) && lead.canal === "ligar" ? "chamada" : "loja";
     const modo = estado.guiaoModo === "reuniao" && !temProprio ? modoPadrao : (estado.guiaoModo || modoPadrao);
     const escolha = criar("select", {
       id: "guiao-lead",
@@ -1904,8 +1914,10 @@
       corpo = blocoGuiaoProprio(lead);
     } else if (modo === "mensagem") {
       corpo = [
-        criar("div", { className: "titulo-sec", textContent: "Depois do sim" }),
+        criar("div", { className: "titulo-sec", textContent: ehTA(lead) ? `Depois do sim (${TA_PLANOS.base.nome})` : "Depois do sim" }),
         blocoMensagem(lead, lugares, "sim"),
+        ehTA(lead) ? criar("div", { className: "titulo-sec", textContent: `Depois do sim (${TA_PLANOS.completo.nome})` }) : null,
+        ehTA(lead) ? blocoMensagem(lead, lugares, "sim-completo") : null,
         criar("div", { className: "titulo-sec", textContent: "Depois da chamada" }),
         blocoMensagem(lead, lugares, "chamada"),
         criar("div", { className: "titulo-sec", textContent: "Depois da visita" }),
@@ -2505,6 +2517,131 @@
     }));
   }
 
+
+  /* ---------- Ticket alto: chamada, visita, seguimento, mensagens e objeções (planos da proposta, mais IVA) ---------- */
+
+  function taTipo(lead) {
+    return ["remodelacoes", "cozinhas", "caixilharia"].includes(lead.nicho) ? "obra" : lead.nicho === "stand" ? "stand" : "auto";
+  }
+  function taPedidos(lead) {
+    const tipo = taTipo(lead);
+    return tipo === "obra" ? "pedidos de orçamento" : tipo === "stand" ? "pedidos de informação sobre carros" : "pedidos de marcação";
+  }
+  function taOcupado(lead) {
+    const tipo = taTipo(lead);
+    return tipo === "obra" ? "em obra" : tipo === "stand" ? "com um cliente" : "a trabalhar num carro";
+  }
+  function taGanho(lead) {
+    const tipo = taTipo(lead);
+    return tipo === "obra" ? "uma obra a mais por trimestre" : tipo === "stand" ? "uma venda a mais por trimestre" : "um ou dois serviços grandes a mais por mês, como um cerâmico ou um PPF";
+  }
+  function taValor(lead) {
+    const tipo = taTipo(lead);
+    return tipo === "obra" ? "uma obra média" : tipo === "stand" ? "a margem de um carro vendido" : "um cerâmico ou um PPF";
+  }
+  function linkAgenteTA(lead) {
+    const site = urlSegura(lead.demo);
+    return site ? `${site.replace(/\/?$/, "/")}agente/` : "[link]";
+  }
+  function guiaoChamadaTA(lead, agora) {
+    const avaliacoes = fraseAvaliacoes(lead);
+    const fixo = soDigitos(lead) && !eTelemovel(lead);
+    return [
+      acao("Objetivo: enviar a demonstração por WhatsApp e marcar 15 minutos. Não vendas o plano ao telefone."),
+      fala(`${saudacao(agora)}, fala o Miguel. Estou a falar com o responsável {${lead.de} ${lead.falar || lead.nome}}?`),
+      avaliacoes ? fala(`Ligo porque ${avaliacoes.charAt(0).toLowerCase()}${avaliacoes.slice(1)}`) : fala("Ligo porque estive a ver o vosso negócio no Google."),
+      fala(`Monto um assistente que responde aos ${taPedidos(lead)} pelo WhatsApp {em menos de 1 minuto}, mesmo quando está ${taOcupado(lead)}. Fiz uma demonstração já com o vosso nome.`),
+      fala(`Pergunta rápida: quando está ${taOcupado(lead)} e alguém liga ou manda mensagem, quem responde?`),
+      acao("Ouve e anota. Se disser que perde chamadas ou demora a responder, é aí que está a venda."),
+      fala(fixo ? "Para que telemóvel lhe posso enviar a demonstração? Pode testá-la como se fosse um cliente." : "Posso enviar-lhe a demonstração para este número? Pode testá-la como se fosse um cliente."),
+      fala("E marcamos {15 minutos} esta semana para lhe mostrar com os seus números? Pode ser aí ou por videochamada."),
+      acao("Marca dia e hora. Ao desligar, envia logo a mensagem \"Depois da chamada\" (Guião → Mensagem).")
+    ];
+  }
+  function guiaoLojaTA(lead, agora) {
+    return [
+      acao("O guião completo da visita (demonstração, diagnóstico, contas e os 2 planos) está na Apresentação."),
+      criar("button", { type: "button", className: "botao forte", textContent: "Abrir a Apresentação", onclick: () => abrirMontra(lead) }),
+      fala(`${saudacao(agora)}. Sou o Miguel Silva. Monto sistemas que respondem aos ${taPedidos(lead)} pelo WhatsApp {em menos de 1 minuto}, mesmo quando está ${taOcupado(lead)}. É o responsável?`),
+      fala("Fiz uma demonstração com o vosso nome. Posso mostrar? São {30 segundos}."),
+      acao("Dá-lhe o telemóvel e pede-lhe para escrever como se fosse um cliente. Não fales enquanto testa."),
+      acao("Se não for o responsável ou não houver tempo, marca 15 minutos sentados. Nunca feches em pé ao balcão.")
+    ];
+  }
+  function guiaoSeguimentoTA(lead, agora) {
+    const contacto = lead.contactadoEm ? new Date(lead.contactadoEm) : null;
+    const quando = !contacto ? "há dias" : diaIso(contacto) === diaIso(agora) ? "há pouco" : naData(contacto);
+    return [
+      fala(`${saudacao(agora)}. Sou o Miguel Silva, falámos {${quando}} sobre o assistente para os ${taPedidos(lead)}.`),
+      fala("Conseguiu experimentar a demonstração?"),
+      acao("Se não experimentou, pede-lhe para a abrir agora, enquanto estão ao telefone."),
+      fala("Quando tem {15 minutos} esta semana para lhe mostrar com os seus números?"),
+      acao("Marca dia e hora. Não discutas o preço ao telefone; se perguntar, abre \"Quanto custa?\".")
+    ];
+  }
+  function textoMensagemTA(lead, tipo) {
+    const site = urlSegura(lead.demo) || "[link]";
+    const agente = linkAgenteTA(lead);
+    const nome = nomeComArtigo(lead);
+    const fim = "Se não quiser mais contacto, responda NÃO e não volto a contactar.";
+    if (tipo === "sim" || tipo === "sim-completo") {
+      const plano = tipo === "sim" ? TA_PLANOS.base : TA_PLANOS.completo;
+      const anuncios = tipo === "sim" ? "" : " A verba dos anúncios paga-se à parte, diretamente à Meta, com o seu cartão.";
+      return `Olá. Obrigado pela confiança. Confirmo o plano ${plano.nome} para ${nome}: ${plano.setup}€ de montagem e ${plano.mes}€ por mês, mais IVA, com um mínimo de 3 meses.${anuncios}\n\nA montagem paga-se no arranque. A 1.ª mensalidade só quando estiver tudo a funcionar, por volta do dia 10.\n\nGarantia: o assistente responde a todos os contactos em menos de 1 minuto e está tudo a funcionar em 10 dias úteis. Se não estiver, esse mês não paga.\n\nEnvio-lhe hoje o contrato. Para confirmar, responda ACEITO.`;
+    }
+    if (tipo === "seguimento") {
+      return `Olá. Sou o Miguel Silva. Conseguiu experimentar o assistente que preparei para ${nome}? Escreva como se fosse um cliente: ${agente}\n\nSe preferir, mostro-lhe em 15 minutos, aí ou por videochamada. Qual é o melhor dia?\n\n${fim}`;
+    }
+    const inicio = tipo === "loja" ? "falámos há pouco" : "falámos há pouco ao telefone";
+    return `Olá. Sou o Miguel Silva, ${inicio}. Esta é a demonstração que preparei para ${nome}.\n\nO assistente (escreva como se fosse um cliente): ${agente}\nO site: ${site}\n\nO assistente responde em menos de 1 minuto, faz 3 perguntas e marca na sua agenda. Nunca dá preços.\n\nQuando lhe dá jeito 15 minutos esta semana para lhe mostrar com os seus números?\n\n${fim}`;
+  }
+  function objecoesTA(lead) {
+    const B = TA_PLANOS.base, C = TA_PLANOS.completo;
+    const lista = [
+      ["Quanto custa?", [
+        fala(`O plano de entrada, o {${B.nome}}, são {${B.setup}€ de montagem e ${B.mes}€ por mês, mais IVA}: o assistente, as chamadas perdidas, o seguimento dos ${taPedidos(lead)} parados e o site.`),
+        fala(`O {${C.nome}} junta os vídeos e os anúncios na Meta: ${C.setup}€ e ${C.mes}€ por mês, mais IVA.`),
+        fala(`Por isso prefiro mostrar-lhe com os seus números: se o sistema recuperar {${taGanho(lead)}}, quantos meses se paga?`)
+      ]],
+      ["\"É caro.\"", [
+        fala(`Faz sentido olhar para isso com números. Quanto vale para si ${taValor(lead)}? Se o sistema recuperar {${taGanho(lead)}}, paga-se.`),
+        fala("Se não recuperar, não faz sentido continuar, e o mínimo são só 3 meses."),
+        acao("Nunca baixes a mensalidade. Se for preciso, baixa a montagem em troca do mínimo de 3 meses.")
+      ]],
+      ["\"Envie-me por email.\"", [
+        fala("Envio já pelo WhatsApp, que é onde pode testar o assistente como se fosse um cliente. E marcamos 15 minutos para ver juntos?")
+      ]],
+      ["\"O meu trabalho vem do boca-a-boca.\"", [
+        fala(`Ótimo, é o melhor cliente que há. Mas quem vem recomendado também liga ou manda mensagem. Quantas dessas apanha quando está ${taOcupado(lead)}?`)
+      ]],
+      ["\"Não tenho tempo.\"", [
+        fala("É precisamente para isso. Eu monto tudo; da sua parte são {30 minutos} no arranque. Depois o assistente trata das primeiras respostas e o senhor só vê as marcações.")
+      ]],
+      ["\"Não confio em robôs a falar com os clientes.\"", [
+        fala("Faz sentido. Por isso o assistente só faz 3 coisas: responde, faz 3 perguntas e marca. Não dá preços nem promete nada. E vê todas as conversas no seu WhatsApp."),
+        acao("Se perguntarem, diz a verdade: é inteligência artificial, com regras apertadas.")
+      ]],
+      ["\"Já paguei a uma agência e não deu nada.\"", [
+        fala("Acontece muito: pagam-se publicações e ninguém mede nada. Aqui medimos o tempo de resposta e as marcações, e vê os números todas as semanas."),
+        fala(`Por isso o {${B.nome}} nem começa pelos anúncios: começa por não perder os contactos que já tem.`)
+      ]],
+      ["\"Já tenho quem responda.\"", [
+        fala(`Quem responde quando está ${taOcupado(lead)} ou fora de horas? Se já responde a tudo em menos de 1 minuto, não precisa de mim.`)
+      ]],
+      ["Não está o responsável", [
+        fala("Qual é a melhor hora para falar com ele? E posso deixar-lhe a demonstração por WhatsApp?"),
+        acao("Anota o nome do responsável nas notas do lead.")
+      ]]
+    ];
+    return lista.map(([titulo, corpo]) => {
+      const bloco = criar("details", { className: "objecao" },
+        criar("summary", { textContent: titulo }),
+        criar("div", { className: "guiao" }, ...corpo)
+      );
+      bloco.dataset.chave = `objecao-ta-${titulo}`;
+      return bloco;
+    });
+  }
 
   /* ---------- Guião próprio de um lead (vem da base de dados: lead.guiaoProprio) ---------- */
 
